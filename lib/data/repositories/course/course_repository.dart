@@ -6,6 +6,9 @@ import 'package:poruaa_core/utils/result.dart';
 
 abstract class CourseRepository {
   Future<Result<List<Course>>> getCoursesOfTeacher(int teacherId);
+  Future<Result<List<Course>>> getCoursesOfStudentByMeByTeacherId(
+    int teacherId,
+  );
   // Future<Result<List<Course>>> getAllCourses();
   // Future<Result<List<Course>>> getAllCoursesOfStudentByMe();
   Future<Result<PaginatedResponse<Course>>> getCoursesOfStudentByMePaginated(

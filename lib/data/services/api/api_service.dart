@@ -6,6 +6,7 @@ import 'model/response.dart';
 abstract class ApiService {
   Future<Result<Response>> get(String path, {Map<String, String>? headers});
 
+  String get hostname;
   Future<Result<Response>> post(
     String path, {
     Map<String, String>? headers,

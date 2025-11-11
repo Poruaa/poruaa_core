@@ -34,6 +34,29 @@ class CoursesServiceImpl extends CoursesService {
   }
 
   @override
+  Future<Result<List<CourseModel>>> getCoursesOfStudentByMeByTeacherId(
+    int teacherId,
+  ) async {
+    var result = await _apiService.get(
+      "students/me/teachers/$teacherId/courses",
+    );
+    switch (result) {
+      case Ok():
+        var response = result.value;
+        var body = response.body;
+        var jsonBody = jsonDecode(body);
+        if (jsonBody is List) {
+          var courses = jsonBody.map((e) => CourseModel.fromJson(e)).toList();
+          return Result.ok(courses);
+        } else {
+          return Result.error("Parse error");
+        }
+      case Err():
+        return Result.error("error");
+    }
+  }
+
+  @override
   Future<Result<CourseModel>> getCourseOfTeacherById(
     int teacherId,
     int courseId,

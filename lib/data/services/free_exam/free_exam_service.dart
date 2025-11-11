@@ -261,6 +261,35 @@ class FreeExamService {
     }
   }
 
+  // Student endpoints for teacher's free exams
+  Future<Result<List<FreeExamDTO>>> getFreeExamsOfStudentByMeByTeacherId(
+    int teacherId,
+  ) async {
+    try {
+      var result = await _apiService.get(
+        "students/me/teachers/$teacherId/free-exams",
+      );
+      if (result case Ok()) {
+      } else {
+        return Result.error("Something went wrong");
+      }
+      var response = result.value;
+      if (response.statusCode != 200) {
+        return Result.error("Something went wrong");
+      }
+      var body = response.body;
+      var jsonBody = jsonDecode(body);
+      if (jsonBody is List) {
+        var freeExams = jsonBody.map((e) => FreeExamDTO.fromJson(e)).toList();
+        return Result.ok(freeExams);
+      } else {
+        return Result.error("Something went wrong");
+      }
+    } catch (e) {
+      return Result.error(e.toString());
+    }
+  }
+
   // Teacher endpoints
   Future<Result<List<FreeExamDTO>>> getFreeExamsOfTeacherByMe(
     int teacherId,

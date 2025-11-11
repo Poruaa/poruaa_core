@@ -10,6 +10,9 @@ abstract class CoursesService {
     int teacherId,
     int courseId,
   );
+  Future<Result<List<CourseModel>>> getCoursesOfStudentByMeByTeacherId(
+    int teacherId,
+  );
 
   // Future<Result<List<CourseModel>>> getAllCoursesOfStudentByMe();
   Future<Result<PaginatedResponse<CourseModel>>>

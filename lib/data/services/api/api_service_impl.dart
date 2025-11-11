@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:poruaa_core/config/poruaa_app_config.dart';
 import 'package:poruaa_core/data/services/access_token/access_token_service.dart';
 import 'package:poruaa_core/data/services/device_info/device_info_service.dart';
 import 'package:poruaa_core/utils/result.dart';
@@ -39,9 +40,11 @@ class _Client extends http.BaseClient {
 }
 
 final class ApiServiceImpl extends ApiService {
-  static const String hostname = kDebugMode
-      ? "http://localhost:8080"
-      : "https://api.poruaa.com";
+  @override
+  String get hostname => _config.baseUrl;
+  // static const String hostname = kDebugMode
+  //     ? "http://localhost:8080"
+  //     : "https://api.poruaa.com";
   // static const String hostname =
   //     kDebugMode ? "http://192.168.0.141:8080" : "https://api.poruaa.com";
   // static const String hostname =
@@ -50,8 +53,11 @@ final class ApiServiceImpl extends ApiService {
   // String hostname = "http://192.168.0.200:8080";
   // static String hostname =
   //     "https://bidda-pith-full-stack-389977953443.asia-southeast1.run.app";
-  ApiServiceImpl(AccessTokenService authService)
-    : _accessTokenService = authService;
+  ApiServiceImpl(PoruaaAppConfig config, AccessTokenService authService)
+    : _accessTokenService = authService,
+      _config = config;
+
+  final PoruaaAppConfig _config;
   final AccessTokenService _accessTokenService;
   final DeviceInfoService _deviceInfoService = DeviceInfoService();
 

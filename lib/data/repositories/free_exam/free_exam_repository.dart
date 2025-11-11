@@ -8,6 +8,10 @@ import 'package:poruaa_core/domain/models/free_exam_result/free_exam_result.dart
 import 'package:poruaa_core/utils/result.dart';
 
 abstract class FreeExamRepository {
+  Future<Result<List<FreeExam>>> getFreeExamsOfStudentByMeByTeacherId(
+    int teacherId,
+  );
+
   Future<Result<List<FreeExam>>> getFreeExamsOfTeacherByMe();
 
   Future<Result<FreeExam>> getFreeExamById(int id);

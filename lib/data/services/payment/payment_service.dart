@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:poruaa_core/data/services/api/api_service_impl.dart';
 import 'package:poruaa_core/data/services/authorized_api/authorized_api_service.dart';
 import 'package:poruaa_core/utils/result.dart';
 
@@ -14,7 +13,7 @@ class PaymentService {
         "payment",
         headers: {
           "Content-Type": "application/json",
-          "origin": ApiServiceImpl.hostname,
+          "origin": _apiService.hostname,
         },
         body: jsonEncode({"amount": amount}),
       );

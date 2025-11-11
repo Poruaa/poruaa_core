@@ -9,6 +9,7 @@ class AuthorizedApiService {
   final ApiService _apiService;
   final AuthService _authService;
   final AccessTokenService _accessTokenService;
+  String get hostname => _apiService.hostname;
 
   AuthorizedApiService(
     this._apiService,

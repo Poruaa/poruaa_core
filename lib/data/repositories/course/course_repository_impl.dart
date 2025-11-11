@@ -143,6 +143,26 @@ class CourseRepositoryImpl extends CourseRepository {
     }
   }
 
+  @override
+  Future<Result<List<Course>>> getCoursesOfStudentByMeByTeacherId(
+    int teacherId,
+  ) async {
+    var result = await _coursesService.getCoursesOfStudentByMeByTeacherId(
+      teacherId,
+    );
+    switch (result) {
+      case Ok():
+        var value = result.value;
+        var courses = value.map((e) => Course.fromModel(e)).toList();
+        await _courseDao.insertAllCourses(
+          courses.map((e) => e.toCourseItemCompanion()),
+        );
+        return Result.ok(courses);
+      case Err():
+        return Result.error("error");
+    }
+  }
+
   // @override
   // Future<Result<List<Course>>> getAllCourses() async {
   //   var result = await _coursesService.getAllCourses();

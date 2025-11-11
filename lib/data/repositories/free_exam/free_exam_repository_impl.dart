@@ -27,6 +27,34 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
   );
 
   @override
+  Future<Result<List<FreeExam>>> getFreeExamsOfStudentByMeByTeacherId(
+    int teacherId,
+  ) async {
+    var result = await _freeExamService.getFreeExamsOfStudentByMeByTeacherId(
+      teacherId,
+    );
+    switch (result) {
+      case Ok(:final value):
+        var freeExams = value.map((e) => FreeExam.fromDTO(e)).toList();
+        var freeExamCompanions = freeExams.map((e) {
+          return e.toCompanion(teacherId);
+        });
+        var exams = value
+            .map((e) => e.exam)
+            .nonNulls
+            .map((e) => Exam.fromDTO(e));
+        var examCompanions = exams.map((e) {
+          return e.toCompanion();
+        });
+        await _examDao.insertAllExams(examCompanions.toList());
+        await _freeExamDao.insertAll(freeExamCompanions.toList());
+        return Result.ok(freeExams);
+      case Err():
+        return Result.error("error");
+    }
+  }
+
+  @override
   Future<Result<List<FreeExam>>> getFreeExamsOfTeacherByMe() async {
     var result = await _freeExamService.getFreeExamsOfTeacherByMe(
       _userRepository.getCurrentUserId,
