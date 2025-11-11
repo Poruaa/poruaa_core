@@ -19,54 +19,89 @@ class AuthorizedApiService {
 
   Future<Result<Response>> get(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
   }) async {
     await _accessTokenService.refreshTokenIfNeeded(_authService);
-    return await _apiService.get(path, headers: headers);
+    return await _apiService.get(
+      path,
+      overrideBaseUrl: overrideBaseUrl,
+      headers: headers,
+    );
   }
 
   Future<Result<Response>> post(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
   }) async {
     await _accessTokenService.refreshTokenIfNeeded(_authService);
-    return await _apiService.post(path, headers: headers, body: body);
+    return await _apiService.post(
+      path,
+      overrideBaseUrl: overrideBaseUrl,
+      headers: headers,
+      body: body,
+    );
   }
 
   Future<Result<Response>> put(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
   }) async {
     await _accessTokenService.refreshTokenIfNeeded(_authService);
-    return await _apiService.put(path, headers: headers, body: body);
+    return await _apiService.put(
+      path,
+      overrideBaseUrl: overrideBaseUrl,
+      headers: headers,
+      body: body,
+    );
   }
 
   Future<Result<Response>> delete(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
   }) async {
     await _accessTokenService.refreshTokenIfNeeded(_authService);
-    return await _apiService.delete(path, headers: headers, body: body);
+    return await _apiService.delete(
+      path,
+      overrideBaseUrl: overrideBaseUrl,
+      headers: headers,
+      body: body,
+    );
   }
 
   Future<Result<Response>> patch(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
   }) async {
     await _accessTokenService.refreshTokenIfNeeded(_authService);
-    return await _apiService.patch(path, headers: headers, body: body);
+    return await _apiService.patch(
+      path,
+      overrideBaseUrl: overrideBaseUrl,
+      headers: headers,
+      body: body,
+    );
   }
 
   Future<Result<Response>> patchMultipart(
     String path, {
+    String? overrideBaseUrl,
     required List<http.MultipartFile> files,
     Map<String, String>? fields,
   }) async {
     await _accessTokenService.refreshTokenIfNeeded(_authService);
-    return await _apiService.patchMultipart(path, files: files, fields: fields);
+    return await _apiService.patchMultipart(
+      path,
+      overrideBaseUrl: overrideBaseUrl,
+      files: files,
+      fields: fields,
+    );
   }
 }

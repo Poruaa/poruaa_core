@@ -4,32 +4,41 @@ import 'package:http/http.dart' as http;
 import 'model/response.dart';
 
 abstract class ApiService {
-  Future<Result<Response>> get(String path, {Map<String, String>? headers});
+  Future<Result<Response>> get(
+    String path, {
+    String? overrideBaseUrl,
+    Map<String, String>? headers,
+  });
 
   String get hostname;
   Future<Result<Response>> post(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
   });
   Future<Result<Response>> patch(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
   });
   Future<Result<Response>> put(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
   });
   Future<Result<Response>> delete(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
   });
 
   Future<Result<Response>> patchMultipart(
     String path, {
+    String? overrideBaseUrl,
     required List<http.MultipartFile> files,
     Map<String, String>? fields,
   });

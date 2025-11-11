@@ -96,9 +96,10 @@ final class ApiServiceImpl extends ApiService {
   @override
   Future<Result<Response>> get(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
   }) async {
-    final Uri url = Uri.parse('$hostname/$path');
+    final Uri url = Uri.parse('${overrideBaseUrl ?? hostname}/$path');
     try {
       var response = await _client.get(url, headers: headers);
       var result = Result.ok(Response(response.statusCode, response.body));
@@ -111,11 +112,12 @@ final class ApiServiceImpl extends ApiService {
   @override
   Future<Result<Response>> post(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
   }) async {
-    final Uri url = Uri.parse('$hostname/$path');
+    final Uri url = Uri.parse('${overrideBaseUrl ?? hostname}/$path');
     try {
       var response = await _client.post(
         url,
@@ -133,11 +135,12 @@ final class ApiServiceImpl extends ApiService {
   @override
   Future<Result<Response>> put(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
   }) async {
-    final Uri url = Uri.parse('$hostname/$path');
+    final Uri url = Uri.parse('${overrideBaseUrl ?? hostname}/$path');
     try {
       var response = await _client.put(
         url,
@@ -155,11 +158,12 @@ final class ApiServiceImpl extends ApiService {
   @override
   Future<Result<Response>> delete(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
   }) async {
-    final Uri url = Uri.parse('$hostname/$path');
+    final Uri url = Uri.parse('${overrideBaseUrl ?? hostname}/$path');
     try {
       var response = await _client.delete(
         url,
@@ -177,11 +181,12 @@ final class ApiServiceImpl extends ApiService {
   @override
   Future<Result<Response>> patch(
     String path, {
+    String? overrideBaseUrl,
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
   }) async {
-    final Uri url = Uri.parse('$hostname/$path');
+    final Uri url = Uri.parse('${overrideBaseUrl ?? hostname}/$path');
     try {
       var response = await _client.patch(
         url,
@@ -199,10 +204,11 @@ final class ApiServiceImpl extends ApiService {
   @override
   Future<Result<Response>> patchMultipart(
     String path, {
+    String? overrideBaseUrl,
     required List<http.MultipartFile> files,
     Map<String, String>? fields,
   }) async {
-    final uri = Uri.parse('$hostname/$path');
+    final uri = Uri.parse('${overrideBaseUrl ?? hostname}/$path');
     final client = _Client(_accessTokenService, _getUserAgent());
 
     final request = http.MultipartRequest('PATCH', uri);

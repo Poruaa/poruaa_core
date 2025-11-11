@@ -1,14 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:poruaa_core/config/poruaa_app_config.dart';
 import 'package:poruaa_core/data/services/api/api_service.dart';
 import 'package:poruaa_core/data/services/auth/auth_service.dart';
 import 'package:poruaa_core/data/services/auth/model/auth_model.dart';
 import 'package:poruaa_core/utils/result.dart';
 
 class AuthServiceImpl extends AuthService {
-  AuthServiceImpl(ApiService apiService) : _apiService = apiService;
+  AuthServiceImpl(ApiService apiService, PoruaaAppConfig config)
+    : _apiService = apiService,
+      _config = config;
   final ApiService _apiService;
+  final PoruaaAppConfig _config;
 
   @override
   Future<Result<AuthModel>> refreshToken(String refreshToken) async {
@@ -93,6 +97,7 @@ class AuthServiceImpl extends AuthService {
   Future<Result<AuthModel>> loginWithGoogle(String authId) async {
     final response = await _apiService.post(
       'auth/google-id-token',
+      overrideBaseUrl: _config.authBaseUrl,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'id_token': authId}),
     );
