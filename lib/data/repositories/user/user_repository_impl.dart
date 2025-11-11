@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:poruaa_core/auth_success.dart';
+import 'package:poruaa_core/config/poruaa_app_config.dart';
 import 'package:poruaa_core/data/repositories/auth/auth_repository.dart';
 import 'package:poruaa_core/data/repositories/user/user_repository.dart';
 import 'package:poruaa_core/data/services/access_token/access_token_service.dart';
@@ -22,14 +23,17 @@ class UserRepositoryImpl extends UserRepository {
     AuthRepository authRepository,
     UserService userService,
     AccessTokenService accessTokenService,
+    PoruaaAppConfig config,
   ) : _userService = userService,
+      _config = config,
       _authRepository = authRepository,
       _accessTokenService = accessTokenService;
 
-  final String clientId =
-      '1010639356081-stvh23d5rh4k8j6gv6u3hacsbvs2upoq.apps.googleusercontent.com';
-  final String redirectUri = 'http://localhost:5430';
+  // final String clientId =
+  //     '1010639356081-stvh23d5rh4k8j6gv6u3hacsbvs2upoq.apps.googleusercontent.com';
+  // final String redirectUri = 'http://localhost:5430';
 
+  final PoruaaAppConfig _config;
   final UserService _userService;
   final AuthRepository _authRepository;
   final AccessTokenService _accessTokenService;
@@ -431,8 +435,8 @@ class UserRepositoryImpl extends UserRepository {
 
   Future<String> _loginWithGoogleWeb() async {
     final authUrl = Uri.https('accounts.google.com', '/o/oauth2/v2/auth', {
-      'client_id': clientId,
-      'redirect_uri': redirectUri,
+      'client_id': _config.webGoogleClientId,
+      'redirect_uri': _config.redirectUri,
       'response_type': 'id_token',
       'scope': 'openid email profile',
       'nonce': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -451,11 +455,15 @@ class UserRepositoryImpl extends UserRepository {
   Future<String> _loginWithGoogleAndroid() async {
     final GoogleSignIn googleSignIn = GoogleSignIn.instance;
     await googleSignIn.initialize(
+      // clientId: kDebugMode
+      //     ? '1010639356081-bceb308gb30r5tk5t90o5rse28jghp42.apps.googleusercontent.com'
+      //     : '1010639356081-ed4mbhjosh70ac8lbbp1p7t6bubfsoo4.apps.googleusercontent.com',
+      // serverClientId:
+      //     '1010639356081-stvh23d5rh4k8j6gv6u3hacsbvs2upoq.apps.googleusercontent.com', // Optional, but needed for authCode
       clientId: kDebugMode
-          ? '1010639356081-bceb308gb30r5tk5t90o5rse28jghp42.apps.googleusercontent.com'
-          : '1010639356081-ed4mbhjosh70ac8lbbp1p7t6bubfsoo4.apps.googleusercontent.com',
-      serverClientId:
-          '1010639356081-stvh23d5rh4k8j6gv6u3hacsbvs2upoq.apps.googleusercontent.com', // Optional, but needed for authCode
+          ? _config.devAndroidGoogleClientId
+          : _config.androidGoogleClientId,
+      serverClientId: _config.webGoogleServerClientId,
     );
 
     // Step 2: Open the URL in the system browser
