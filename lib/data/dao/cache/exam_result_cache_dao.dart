@@ -25,6 +25,7 @@ class ExamResultCacheDao extends DatabaseAccessor<CacheDatabase>
         resultType: Value(examResult.resultType.toString()),
         rank: Value(examResult.rank),
         negativeMarking: Value(examResult.negativeMarking),
+        startTime: Value(examResult.startTime),
         cachedAt: Value(DateTime.now()),
       );
 
@@ -107,6 +108,7 @@ class ExamResultCacheDao extends DatabaseAccessor<CacheDatabase>
       resultType: ResultType.fromString(result.resultType) ?? ResultType.absent,
       rank: result.rank,
       negativeMarking: result.negativeMarking,
+      startTime: result.startTime,
       questions: questions.map((q) {
         final options = q.options ?? [];
         return Question(
@@ -219,6 +221,7 @@ class ExamResultCacheDao extends DatabaseAccessor<CacheDatabase>
               ResultType.fromString(result.resultType) ?? ResultType.absent,
           rank: result.rank,
           negativeMarking: result.negativeMarking,
+          startTime: result.startTime,
           questions: questions.map((q) {
             final options = q.options ?? [];
             return Question(

@@ -137,6 +137,18 @@ class $CourseExamResultItemsTable extends CourseExamResultItems
     requiredDuringInsert: true,
     $customConstraints: 'NOT NULL',
   );
+  static const VerificationMeta _startTimeMeta = const VerificationMeta(
+    'startTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
+    'start_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -150,6 +162,7 @@ class $CourseExamResultItemsTable extends CourseExamResultItems
     rank,
     negativeMarking,
     cachedAt,
+    startTime,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -242,6 +255,14 @@ class $CourseExamResultItemsTable extends CourseExamResultItems
     } else if (isInserting) {
       context.missing(_cachedAtMeta);
     }
+    if (data.containsKey('start_time')) {
+      context.handle(
+        _startTimeMeta,
+        startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startTimeMeta);
+    }
     return context;
   }
 
@@ -297,6 +318,10 @@ class $CourseExamResultItemsTable extends CourseExamResultItems
         DriftSqlType.dateTime,
         data['${effectivePrefix}cached_at'],
       )!,
+      startTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_time'],
+      )!,
     );
   }
 
@@ -322,6 +347,7 @@ class CourseExamResultItem extends DataClass
   final int? rank;
   final double negativeMarking;
   final DateTime cachedAt;
+  final DateTime startTime;
   const CourseExamResultItem({
     required this.id,
     required this.studentId,
@@ -334,6 +360,7 @@ class CourseExamResultItem extends DataClass
     this.rank,
     required this.negativeMarking,
     required this.cachedAt,
+    required this.startTime,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -355,6 +382,7 @@ class CourseExamResultItem extends DataClass
     }
     map['negative_marking'] = Variable<double>(negativeMarking);
     map['cached_at'] = Variable<DateTime>(cachedAt);
+    map['start_time'] = Variable<DateTime>(startTime);
     return map;
   }
 
@@ -371,6 +399,7 @@ class CourseExamResultItem extends DataClass
       rank: rank == null && nullToAbsent ? const Value.absent() : Value(rank),
       negativeMarking: Value(negativeMarking),
       cachedAt: Value(cachedAt),
+      startTime: Value(startTime),
     );
   }
 
@@ -391,6 +420,7 @@ class CourseExamResultItem extends DataClass
       rank: serializer.fromJson<int?>(json['rank']),
       negativeMarking: serializer.fromJson<double>(json['negativeMarking']),
       cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
+      startTime: serializer.fromJson<DateTime>(json['startTime']),
     );
   }
   @override
@@ -408,6 +438,7 @@ class CourseExamResultItem extends DataClass
       'rank': serializer.toJson<int?>(rank),
       'negativeMarking': serializer.toJson<double>(negativeMarking),
       'cachedAt': serializer.toJson<DateTime>(cachedAt),
+      'startTime': serializer.toJson<DateTime>(startTime),
     };
   }
 
@@ -423,6 +454,7 @@ class CourseExamResultItem extends DataClass
     Value<int?> rank = const Value.absent(),
     double? negativeMarking,
     DateTime? cachedAt,
+    DateTime? startTime,
   }) => CourseExamResultItem(
     id: id ?? this.id,
     studentId: studentId ?? this.studentId,
@@ -435,6 +467,7 @@ class CourseExamResultItem extends DataClass
     rank: rank.present ? rank.value : this.rank,
     negativeMarking: negativeMarking ?? this.negativeMarking,
     cachedAt: cachedAt ?? this.cachedAt,
+    startTime: startTime ?? this.startTime,
   );
   CourseExamResultItem copyWithCompanion(CourseExamResultItemsCompanion data) {
     return CourseExamResultItem(
@@ -455,6 +488,7 @@ class CourseExamResultItem extends DataClass
           ? data.negativeMarking.value
           : this.negativeMarking,
       cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+      startTime: data.startTime.present ? data.startTime.value : this.startTime,
     );
   }
 
@@ -471,7 +505,8 @@ class CourseExamResultItem extends DataClass
           ..write('resultType: $resultType, ')
           ..write('rank: $rank, ')
           ..write('negativeMarking: $negativeMarking, ')
-          ..write('cachedAt: $cachedAt')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('startTime: $startTime')
           ..write(')'))
         .toString();
   }
@@ -489,6 +524,7 @@ class CourseExamResultItem extends DataClass
     rank,
     negativeMarking,
     cachedAt,
+    startTime,
   );
   @override
   bool operator ==(Object other) =>
@@ -504,7 +540,8 @@ class CourseExamResultItem extends DataClass
           other.resultType == this.resultType &&
           other.rank == this.rank &&
           other.negativeMarking == this.negativeMarking &&
-          other.cachedAt == this.cachedAt);
+          other.cachedAt == this.cachedAt &&
+          other.startTime == this.startTime);
 }
 
 class CourseExamResultItemsCompanion
@@ -520,6 +557,7 @@ class CourseExamResultItemsCompanion
   final Value<int?> rank;
   final Value<double> negativeMarking;
   final Value<DateTime> cachedAt;
+  final Value<DateTime> startTime;
   const CourseExamResultItemsCompanion({
     this.id = const Value.absent(),
     this.studentId = const Value.absent(),
@@ -532,6 +570,7 @@ class CourseExamResultItemsCompanion
     this.rank = const Value.absent(),
     this.negativeMarking = const Value.absent(),
     this.cachedAt = const Value.absent(),
+    this.startTime = const Value.absent(),
   });
   CourseExamResultItemsCompanion.insert({
     this.id = const Value.absent(),
@@ -545,6 +584,7 @@ class CourseExamResultItemsCompanion
     this.rank = const Value.absent(),
     required double negativeMarking,
     required DateTime cachedAt,
+    required DateTime startTime,
   }) : studentId = Value(studentId),
        courseExamId = Value(courseExamId),
        examName = Value(examName),
@@ -553,7 +593,8 @@ class CourseExamResultItemsCompanion
        duration = Value(duration),
        resultType = Value(resultType),
        negativeMarking = Value(negativeMarking),
-       cachedAt = Value(cachedAt);
+       cachedAt = Value(cachedAt),
+       startTime = Value(startTime);
   static Insertable<CourseExamResultItem> custom({
     Expression<int>? id,
     Expression<int>? studentId,
@@ -566,6 +607,7 @@ class CourseExamResultItemsCompanion
     Expression<int>? rank,
     Expression<double>? negativeMarking,
     Expression<DateTime>? cachedAt,
+    Expression<DateTime>? startTime,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -579,6 +621,7 @@ class CourseExamResultItemsCompanion
       if (rank != null) 'rank': rank,
       if (negativeMarking != null) 'negative_marking': negativeMarking,
       if (cachedAt != null) 'cached_at': cachedAt,
+      if (startTime != null) 'start_time': startTime,
     });
   }
 
@@ -594,6 +637,7 @@ class CourseExamResultItemsCompanion
     Value<int?>? rank,
     Value<double>? negativeMarking,
     Value<DateTime>? cachedAt,
+    Value<DateTime>? startTime,
   }) {
     return CourseExamResultItemsCompanion(
       id: id ?? this.id,
@@ -607,6 +651,7 @@ class CourseExamResultItemsCompanion
       rank: rank ?? this.rank,
       negativeMarking: negativeMarking ?? this.negativeMarking,
       cachedAt: cachedAt ?? this.cachedAt,
+      startTime: startTime ?? this.startTime,
     );
   }
 
@@ -648,6 +693,9 @@ class CourseExamResultItemsCompanion
     if (cachedAt.present) {
       map['cached_at'] = Variable<DateTime>(cachedAt.value);
     }
+    if (startTime.present) {
+      map['start_time'] = Variable<DateTime>(startTime.value);
+    }
     return map;
   }
 
@@ -664,7 +712,8 @@ class CourseExamResultItemsCompanion
           ..write('resultType: $resultType, ')
           ..write('rank: $rank, ')
           ..write('negativeMarking: $negativeMarking, ')
-          ..write('cachedAt: $cachedAt')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('startTime: $startTime')
           ..write(')'))
         .toString();
   }
@@ -1316,6 +1365,7 @@ typedef $$CourseExamResultItemsTableCreateCompanionBuilder =
       Value<int?> rank,
       required double negativeMarking,
       required DateTime cachedAt,
+      required DateTime startTime,
     });
 typedef $$CourseExamResultItemsTableUpdateCompanionBuilder =
     CourseExamResultItemsCompanion Function({
@@ -1330,6 +1380,7 @@ typedef $$CourseExamResultItemsTableUpdateCompanionBuilder =
       Value<int?> rank,
       Value<double> negativeMarking,
       Value<DateTime> cachedAt,
+      Value<DateTime> startTime,
     });
 
 class $$CourseExamResultItemsTableFilterComposer
@@ -1394,6 +1445,11 @@ class $$CourseExamResultItemsTableFilterComposer
 
   ColumnFilters<DateTime> get cachedAt => $composableBuilder(
     column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1461,6 +1517,11 @@ class $$CourseExamResultItemsTableOrderingComposer
     column: $table.cachedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CourseExamResultItemsTableAnnotationComposer
@@ -1510,6 +1571,9 @@ class $$CourseExamResultItemsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
 }
 
 class $$CourseExamResultItemsTableTableManager
@@ -1569,6 +1633,7 @@ class $$CourseExamResultItemsTableTableManager
                 Value<int?> rank = const Value.absent(),
                 Value<double> negativeMarking = const Value.absent(),
                 Value<DateTime> cachedAt = const Value.absent(),
+                Value<DateTime> startTime = const Value.absent(),
               }) => CourseExamResultItemsCompanion(
                 id: id,
                 studentId: studentId,
@@ -1581,6 +1646,7 @@ class $$CourseExamResultItemsTableTableManager
                 rank: rank,
                 negativeMarking: negativeMarking,
                 cachedAt: cachedAt,
+                startTime: startTime,
               ),
           createCompanionCallback:
               ({
@@ -1595,6 +1661,7 @@ class $$CourseExamResultItemsTableTableManager
                 Value<int?> rank = const Value.absent(),
                 required double negativeMarking,
                 required DateTime cachedAt,
+                required DateTime startTime,
               }) => CourseExamResultItemsCompanion.insert(
                 id: id,
                 studentId: studentId,
@@ -1607,6 +1674,7 @@ class $$CourseExamResultItemsTableTableManager
                 rank: rank,
                 negativeMarking: negativeMarking,
                 cachedAt: cachedAt,
+                startTime: startTime,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

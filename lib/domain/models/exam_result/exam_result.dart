@@ -12,6 +12,7 @@ class ExamResult {
   double duration;
   int? rank;
   double negativeMarking;
+  DateTime startTime;
   List<Question> questions;
 
   ExamResult({
@@ -25,6 +26,7 @@ class ExamResult {
     required this.resultType,
     this.rank,
     required this.negativeMarking,
+    required this.startTime,
     this.questions = const [],
   });
 
@@ -39,6 +41,7 @@ class ExamResult {
       duration: 0.0,
       resultType: ResultType.absent,
       negativeMarking: 0.0,
+      startTime: DateTime.now(),
     );
   }
 
@@ -54,6 +57,7 @@ class ExamResult {
     double? duration,
     int? rank,
     double? negativeMarking,
+    DateTime? startTime,
   }) {
     return ExamResult(
       id: id ?? this.id,
@@ -67,6 +71,7 @@ class ExamResult {
       rank: rank ?? this.rank,
       negativeMarking: negativeMarking ?? this.negativeMarking,
       questions: questions ?? this.questions,
+      startTime: startTime ?? this.startTime,
     );
   }
 
@@ -83,6 +88,7 @@ class ExamResult {
       rank: model.rank,
       negativeMarking: model.negativeMarking,
       questions: model.questions.map((q) => Question.fromModel(q)).toList(),
+      startTime: model.startTime,
     );
   }
 
@@ -99,6 +105,7 @@ class ExamResult {
       rank: rank,
       negativeMarking: negativeMarking,
       questions: questions.map((q) => q.toModel()).toList(),
+      startTime: startTime,
     );
   }
 

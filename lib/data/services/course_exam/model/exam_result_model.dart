@@ -32,6 +32,7 @@ class ExamResultModel {
   ResultType resultType;
   int? rank;
   double negativeMarking;
+  DateTime startTime;
   List<QuestionModel> questions = const [];
 
   ExamResultModel({
@@ -43,6 +44,7 @@ class ExamResultModel {
     required this.score,
     required this.duration,
     required this.resultType,
+    required this.startTime,
     this.rank,
     required this.negativeMarking,
     this.questions = const [],
@@ -56,6 +58,7 @@ class ExamResultModel {
       "result_type": String resultType,
       "course_exam_id": int courseExamId,
       "result": Map answers,
+      "start_time": String startTime,
       "score": double score,
       "duration": double duration,
     }) {
@@ -80,6 +83,7 @@ class ExamResultModel {
           ),
         ),
         score: score,
+        startTime: DateTime.parse(startTime).toLocal(),
         rank: map["rank"] as int?,
         negativeMarking: (map["negative_marking"] as num?)?.toDouble() ?? 0.0,
         questions: questionList,
@@ -100,6 +104,7 @@ class ExamResultModel {
       "exam_name": examName,
       "duration": duration,
       "rank": rank,
+      "start_time": startTime.toUtc().toIso8601String(),
       "negative_marking": negativeMarking,
     };
   }

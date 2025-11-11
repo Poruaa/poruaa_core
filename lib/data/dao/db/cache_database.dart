@@ -52,6 +52,7 @@ class CourseExamResultItems extends Table {
   IntColumn get rank => integer().nullable()();
   RealColumn get negativeMarking => real().customConstraint('NOT NULL')();
   DateTimeColumn get cachedAt => dateTime().customConstraint('NOT NULL')();
+  DateTimeColumn get startTime => dateTime().customConstraint('NOT NULL')();
 
   @override
   List<String> get customConstraints => [
@@ -124,5 +125,5 @@ class CacheDatabase extends _$CacheDatabase {
   }
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 }

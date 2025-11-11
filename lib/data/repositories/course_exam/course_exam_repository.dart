@@ -300,6 +300,13 @@ class CourseExamRepository {
             .getExamResultByCourseExamId(studentId, courseExamId);
 
         if (cachedResult != null) {
+          var startTime = cachedResult.startTime;
+          var endTime = startTime.add(
+            Duration(minutes: cachedResult.duration.toInt()),
+          );
+          if (DateTime.now().isBefore(endTime)) {
+            return Result.error(result.error);
+          }
           return Result.ok(cachedResult);
         } else {
           // No cache available, return the backend error
