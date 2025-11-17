@@ -45,6 +45,13 @@ class TeacherUserModel extends UserModel {
   final String? website;
   final bool premium;
   final String? profileImage;
+
+  // Storage fields
+  final bool storageEnabled;
+  final int storageQuotaBytes;
+  final int storageUsedBytes;
+  final DateTime? storageExpiresAt;
+
   TeacherUserModel({
     required super.id,
     super.name,
@@ -60,6 +67,10 @@ class TeacherUserModel extends UserModel {
     this.website,
     this.premium = false,
     this.profileImage,
+    this.storageEnabled = false,
+    this.storageQuotaBytes = 0,
+    this.storageUsedBytes = 0,
+    this.storageExpiresAt,
   }) : super(role: 'teacher');
 
   @override
@@ -75,6 +86,10 @@ class TeacherUserModel extends UserModel {
       'website': website,
       'premium': premium,
       'profile_image': profileImage,
+      'storage_enabled': storageEnabled,
+      'storage_quota_bytes': storageQuotaBytes,
+      'storage_used_bytes': storageUsedBytes,
+      'storage_expires_at': storageExpiresAt?.toIso8601String(),
     });
   }
 
@@ -95,6 +110,12 @@ class TeacherUserModel extends UserModel {
         website: json['website'],
         premium: json['premium'] ?? false,
         profileImage: json['profile_image'],
+        storageEnabled: json['storage_enabled'] ?? false,
+        storageQuotaBytes: json['storage_quota_bytes'] ?? 0,
+        storageUsedBytes: json['storage_used_bytes'] ?? 0,
+        storageExpiresAt: json['storage_expires_at'] != null
+            ? DateTime.parse(json['storage_expires_at'])
+            : null,
       );
     } catch (_) {
       return null;

@@ -55,6 +55,12 @@ class Teacher extends User {
   final bool premium;
   final String? profileImage;
 
+  // Storage fields
+  final bool storageEnabled;
+  final int storageQuotaBytes;
+  final int storageUsedBytes;
+  final DateTime? storageExpiresAt;
+
   Teacher({
     required super.id,
     super.name,
@@ -70,6 +76,10 @@ class Teacher extends User {
     this.website,
     this.premium = false,
     this.profileImage,
+    this.storageEnabled = false,
+    this.storageQuotaBytes = 0,
+    this.storageUsedBytes = 0,
+    this.storageExpiresAt,
   }) : super(role: 'teacher');
 
   @override
@@ -85,6 +95,10 @@ class Teacher extends User {
       'website': website,
       'premium': premium,
       'profile_image': profileImage,
+      'storage_enabled': storageEnabled,
+      'storage_quota_bytes': storageQuotaBytes,
+      'storage_used_bytes': storageUsedBytes,
+      'storage_expires_at': storageExpiresAt?.toIso8601String(),
     });
   }
 
@@ -104,6 +118,10 @@ class Teacher extends User {
       website: userModel.website,
       premium: userModel.premium,
       profileImage: userModel.profileImage,
+      storageEnabled: userModel.storageEnabled,
+      storageQuotaBytes: userModel.storageQuotaBytes,
+      storageUsedBytes: userModel.storageUsedBytes,
+      storageExpiresAt: userModel.storageExpiresAt,
     );
   }
 
@@ -122,6 +140,10 @@ class Teacher extends User {
     website: website,
     premium: premium,
     profileImage: profileImage,
+    storageEnabled: storageEnabled,
+    storageQuotaBytes: storageQuotaBytes,
+    storageUsedBytes: storageUsedBytes,
+    storageExpiresAt: storageExpiresAt,
   );
 
   static Teacher? fromJson(Map<String, dynamic> json) {
@@ -139,8 +161,14 @@ class Teacher extends User {
         linkedIn: json['linkedin'],
         instagram: json['instagram'],
         website: json['website'],
-        premium: json['premium'],
+        premium: json['premium'] ?? false,
         profileImage: json['profile_image'],
+        storageEnabled: json['storage_enabled'] ?? false,
+        storageQuotaBytes: json['storage_quota_bytes'] ?? 0,
+        storageUsedBytes: json['storage_used_bytes'] ?? 0,
+        storageExpiresAt: json['storage_expires_at'] != null
+            ? DateTime.parse(json['storage_expires_at'])
+            : null,
       );
     } catch (_) {
       return null;
@@ -252,6 +280,23 @@ class Student extends User {
 }
 
 class Organization extends User {
+  final String? whatsapp;
+  final String? telegram;
+  final String? youtube;
+  final String? facebook;
+  final String? twitter;
+  final String? linkedIn;
+  final String? instagram;
+  final String? website;
+  final bool premium;
+  final String? profileImage;
+
+  // Storage fields
+  final bool storageEnabled;
+  final int storageQuotaBytes;
+  final int storageUsedBytes;
+  final DateTime? storageExpiresAt;
+
   Organization({
     required super.id,
     super.name,
@@ -267,18 +312,12 @@ class Organization extends User {
     this.website,
     this.premium = false,
     this.profileImage,
+    this.storageEnabled = false,
+    this.storageQuotaBytes = 0,
+    this.storageUsedBytes = 0,
+    this.storageExpiresAt,
   }) : super(role: 'organization');
 
-  final String? whatsapp;
-  final String? telegram;
-  final String? youtube;
-  final String? facebook;
-  final String? twitter;
-  final String? linkedIn;
-  final String? instagram;
-  final String? website;
-  final bool premium;
-  final String? profileImage;
   factory Organization.fromTeacher(Teacher teacher) {
     return Organization(
       id: teacher.id,
@@ -295,6 +334,10 @@ class Organization extends User {
       website: teacher.website,
       premium: teacher.premium,
       profileImage: teacher.profileImage,
+      storageEnabled: teacher.storageEnabled,
+      storageQuotaBytes: teacher.storageQuotaBytes,
+      storageUsedBytes: teacher.storageUsedBytes,
+      storageExpiresAt: teacher.storageExpiresAt,
     );
   }
 
