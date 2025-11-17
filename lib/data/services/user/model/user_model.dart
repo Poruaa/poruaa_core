@@ -44,6 +44,7 @@ class TeacherUserModel extends UserModel {
   final String? instagram;
   final String? website;
   final bool premium;
+  final String? profileImage;
   TeacherUserModel({
     required super.id,
     super.name,
@@ -58,6 +59,7 @@ class TeacherUserModel extends UserModel {
     this.instagram,
     this.website,
     this.premium = false,
+    this.profileImage,
   }) : super(role: 'teacher');
 
   @override
@@ -72,6 +74,7 @@ class TeacherUserModel extends UserModel {
       'instagram': instagram,
       'website': website,
       'premium': premium,
+      'profile_image': profileImage,
     });
   }
 
@@ -91,6 +94,7 @@ class TeacherUserModel extends UserModel {
         instagram: json['instagram'],
         website: json['website'],
         premium: json['premium'] ?? false,
+        profileImage: json['profile_image'],
       );
     } catch (_) {
       return null;

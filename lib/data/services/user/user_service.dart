@@ -19,4 +19,8 @@ abstract class UserService {
   Future<bool> deleteStudentUser();
   Future<bool> deleteTeacherUser(int teacherId);
   Future<Result<ResendVerificationResponse>> resendVerificationEmail();
+  Future<Result<TeacherUserModel>> updateTeacherProfileImage(
+    int teacherId,
+    String profileImageUrl,
+  );
 }

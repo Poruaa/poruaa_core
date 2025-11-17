@@ -53,6 +53,7 @@ class Teacher extends User {
   final String? instagram;
   final String? website;
   final bool premium;
+  final String? profileImage;
 
   Teacher({
     required super.id,
@@ -68,6 +69,7 @@ class Teacher extends User {
     this.instagram,
     this.website,
     this.premium = false,
+    this.profileImage,
   }) : super(role: 'teacher');
 
   @override
@@ -82,6 +84,7 @@ class Teacher extends User {
       'instagram': instagram,
       'website': website,
       'premium': premium,
+      'profile_image': profileImage,
     });
   }
 
@@ -100,6 +103,7 @@ class Teacher extends User {
       instagram: userModel.instagram,
       website: userModel.website,
       premium: userModel.premium,
+      profileImage: userModel.profileImage,
     );
   }
 
@@ -117,6 +121,7 @@ class Teacher extends User {
     instagram: instagram,
     website: website,
     premium: premium,
+    profileImage: profileImage,
   );
 
   static Teacher? fromJson(Map<String, dynamic> json) {
@@ -135,6 +140,7 @@ class Teacher extends User {
         instagram: json['instagram'],
         website: json['website'],
         premium: json['premium'],
+        profileImage: json['profile_image'],
       );
     } catch (_) {
       return null;
@@ -260,6 +266,7 @@ class Organization extends User {
     this.instagram,
     this.website,
     this.premium = false,
+    this.profileImage,
   }) : super(role: 'organization');
 
   final String? whatsapp;
@@ -271,6 +278,7 @@ class Organization extends User {
   final String? instagram;
   final String? website;
   final bool premium;
+  final String? profileImage;
   factory Organization.fromTeacher(Teacher teacher) {
     return Organization(
       id: teacher.id,
@@ -286,6 +294,7 @@ class Organization extends User {
       instagram: teacher.instagram,
       website: teacher.website,
       premium: teacher.premium,
+      profileImage: teacher.profileImage,
     );
   }
 

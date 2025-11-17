@@ -39,5 +39,9 @@ abstract class UserRepository {
   Future<Result<ResendVerificationResponse>> resendVerificationEmail();
   Future<AccessToken?> getAccessToken();
   Future<Result<void>> requestPasswordReset(String email);
+  Future<Result<Teacher>> updateTeacherProfileImage(
+    int teacherId,
+    String profileImageUrl,
+  );
   void dispose();
 }

@@ -315,4 +315,37 @@ class UserServiceImpl extends UserService {
         return Result.error("Network error: ${response.error}");
     }
   }
+
+  @override
+  Future<Result<TeacherUserModel>> updateTeacherProfileImage(
+    int teacherId,
+    String profileImageUrl,
+  ) async {
+    try {
+      final response = await _apiService.patch(
+        'teachers/$teacherId/profile-image-url',
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'profile_image': profileImageUrl}),
+      );
+
+      switch (response) {
+        case Ok():
+          if (response.value.statusCode != 200) {
+            return Result.error(
+              "Failed to update profile image: ${response.value.statusCode}",
+            );
+          }
+          var body = response.value.body;
+          var teacher = TeacherUserModel.fromJson(jsonDecode(body));
+          if (teacher == null) {
+            return Result.error("Parse error");
+          }
+          return Result.ok(teacher);
+        case Err():
+          return Result.error(response.error);
+      }
+    } catch (e) {
+      return Result.error(e);
+    }
+  }
 }

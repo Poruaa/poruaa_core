@@ -547,4 +547,32 @@ class UserRepositoryImpl extends UserRepository {
   Future<Result<void>> requestPasswordReset(String email) async {
     return await _authRepository.requestPasswordReset(email);
   }
+
+  @override
+  Future<Result<Teacher>> updateTeacherProfileImage(
+    int teacherId,
+    String profileImageUrl,
+  ) async {
+    var result = await _userService.updateTeacherProfileImage(
+      teacherId,
+      profileImageUrl,
+    );
+    switch (result) {
+      case Ok():
+        var user = Teacher.fromUserModel(result.value);
+        _teacherUserSubject.add(user);
+        _userSubject.add(user);
+        AppLogger.debug(
+          "Teacher profile image updated",
+          params: {"id": user.id, "profile_image": profileImageUrl},
+        );
+        return Result.ok(user);
+      case Err():
+        AppLogger.error(
+          "Teacher profile image update failed",
+          error: result.error,
+        );
+        return Result.error(result.error);
+    }
+  }
 }
