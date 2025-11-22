@@ -102,7 +102,7 @@ final class ApiServiceImpl extends ApiService {
     final Uri url = Uri.parse('${overrideBaseUrl ?? hostname}/$path');
     try {
       var response = await _client.get(url, headers: headers);
-      var result = Result.ok(Response(response.statusCode, response.body));
+      var result = Result.ok(Response.fromHttpResponse(response));
       return result;
     } catch (e) {
       return Result.error(e);
@@ -125,7 +125,7 @@ final class ApiServiceImpl extends ApiService {
         body: body,
         encoding: encoding,
       );
-      var result = Result.ok(Response(response.statusCode, response.body));
+      var result = Result.ok(Response.fromHttpResponse(response));
       return result;
     } catch (e) {
       return Result.error(e);
@@ -148,7 +148,7 @@ final class ApiServiceImpl extends ApiService {
         body: body,
         encoding: encoding,
       );
-      var result = Result.ok(Response(response.statusCode, response.body));
+      var result = Result.ok(Response.fromHttpResponse(response));
       return result;
     } catch (e) {
       return Result.error(e);
@@ -171,7 +171,7 @@ final class ApiServiceImpl extends ApiService {
         body: body,
         encoding: encoding,
       );
-      var result = Result.ok(Response(response.statusCode, response.body));
+      var result = Result.ok(Response.fromHttpResponse(response));
       return result;
     } catch (e) {
       return Result.error(e);
@@ -194,7 +194,7 @@ final class ApiServiceImpl extends ApiService {
         body: body,
         encoding: encoding,
       );
-      var result = Result.ok(Response(response.statusCode, response.body));
+      var result = Result.ok(Response.fromHttpResponse(response));
       return result;
     } catch (e) {
       return Result.error(e);
@@ -224,7 +224,7 @@ final class ApiServiceImpl extends ApiService {
     try {
       final streamed = await client.send(request);
       final response = await http.Response.fromStream(streamed);
-      return Result.ok(Response(response.statusCode, response.body));
+      return Result.ok(Response.fromHttpResponse(response));
     } catch (e) {
       return Result.error(e.toString());
     } finally {
