@@ -186,7 +186,8 @@ enum MaterialType {
   youtubeVideo('youtube_video'),
   facebookVideo('facebook_video'),
   externalLink('external_link'),
-  textContent('text_content');
+  textContent('text_content'),
+  pdf('pdf');
 
   const MaterialType(this.value);
   final String value;
@@ -208,6 +209,8 @@ enum MaterialType {
         return 'External Link';
       case MaterialType.textContent:
         return 'Text Content';
+      case MaterialType.pdf:
+        return 'PDF';
     }
   }
 
@@ -220,6 +223,8 @@ enum MaterialType {
       case MaterialType.externalLink:
         return '🔗';
       case MaterialType.textContent:
+        return '📄';
+      case MaterialType.pdf:
         return '📄';
     }
   }
