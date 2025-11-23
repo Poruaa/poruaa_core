@@ -5811,6 +5811,21 @@ class $CourseMaterialItemsTable extends CourseMaterialItems
     requiredDuringInsert: false,
     defaultValue: Constant(0),
   );
+  static const VerificationMeta _isPublicMeta = const VerificationMeta(
+    'isPublic',
+  );
+  @override
+  late final GeneratedColumn<bool> isPublic = GeneratedColumn<bool>(
+    'is_public',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_public" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -5844,6 +5859,7 @@ class $CourseMaterialItemsTable extends CourseMaterialItems
     textContent,
     duration,
     orderIndex,
+    isPublic,
     createdAt,
     updatedAt,
   ];
@@ -5925,6 +5941,12 @@ class $CourseMaterialItemsTable extends CourseMaterialItems
         orderIndex.isAcceptableOrUnknown(data['order_index']!, _orderIndexMeta),
       );
     }
+    if (data.containsKey('is_public')) {
+      context.handle(
+        _isPublicMeta,
+        isPublic.isAcceptableOrUnknown(data['is_public']!, _isPublicMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -5982,6 +6004,10 @@ class $CourseMaterialItemsTable extends CourseMaterialItems
         DriftSqlType.int,
         data['${effectivePrefix}order_index'],
       )!,
+      isPublic: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_public'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -6010,6 +6036,7 @@ class CourseMaterialItem extends DataClass
   final String? textContent;
   final int? duration;
   final int orderIndex;
+  final bool isPublic;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   const CourseMaterialItem({
@@ -6022,6 +6049,7 @@ class CourseMaterialItem extends DataClass
     this.textContent,
     this.duration,
     required this.orderIndex,
+    required this.isPublic,
     this.createdAt,
     this.updatedAt,
   });
@@ -6045,6 +6073,7 @@ class CourseMaterialItem extends DataClass
       map['duration'] = Variable<int>(duration);
     }
     map['order_index'] = Variable<int>(orderIndex);
+    map['is_public'] = Variable<bool>(isPublic);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
     }
@@ -6071,6 +6100,7 @@ class CourseMaterialItem extends DataClass
           ? const Value.absent()
           : Value(duration),
       orderIndex: Value(orderIndex),
+      isPublic: Value(isPublic),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -6095,6 +6125,7 @@ class CourseMaterialItem extends DataClass
       textContent: serializer.fromJson<String?>(json['textContent']),
       duration: serializer.fromJson<int?>(json['duration']),
       orderIndex: serializer.fromJson<int>(json['orderIndex']),
+      isPublic: serializer.fromJson<bool>(json['isPublic']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
@@ -6112,6 +6143,7 @@ class CourseMaterialItem extends DataClass
       'textContent': serializer.toJson<String?>(textContent),
       'duration': serializer.toJson<int?>(duration),
       'orderIndex': serializer.toJson<int>(orderIndex),
+      'isPublic': serializer.toJson<bool>(isPublic),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
@@ -6127,6 +6159,7 @@ class CourseMaterialItem extends DataClass
     Value<String?> textContent = const Value.absent(),
     Value<int?> duration = const Value.absent(),
     int? orderIndex,
+    bool? isPublic,
     Value<DateTime?> createdAt = const Value.absent(),
     Value<DateTime?> updatedAt = const Value.absent(),
   }) => CourseMaterialItem(
@@ -6139,6 +6172,7 @@ class CourseMaterialItem extends DataClass
     textContent: textContent.present ? textContent.value : this.textContent,
     duration: duration.present ? duration.value : this.duration,
     orderIndex: orderIndex ?? this.orderIndex,
+    isPublic: isPublic ?? this.isPublic,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
@@ -6161,6 +6195,7 @@ class CourseMaterialItem extends DataClass
       orderIndex: data.orderIndex.present
           ? data.orderIndex.value
           : this.orderIndex,
+      isPublic: data.isPublic.present ? data.isPublic.value : this.isPublic,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -6178,6 +6213,7 @@ class CourseMaterialItem extends DataClass
           ..write('textContent: $textContent, ')
           ..write('duration: $duration, ')
           ..write('orderIndex: $orderIndex, ')
+          ..write('isPublic: $isPublic, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -6195,6 +6231,7 @@ class CourseMaterialItem extends DataClass
     textContent,
     duration,
     orderIndex,
+    isPublic,
     createdAt,
     updatedAt,
   );
@@ -6211,6 +6248,7 @@ class CourseMaterialItem extends DataClass
           other.textContent == this.textContent &&
           other.duration == this.duration &&
           other.orderIndex == this.orderIndex &&
+          other.isPublic == this.isPublic &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -6225,6 +6263,7 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
   final Value<String?> textContent;
   final Value<int?> duration;
   final Value<int> orderIndex;
+  final Value<bool> isPublic;
   final Value<DateTime?> createdAt;
   final Value<DateTime?> updatedAt;
   const CourseMaterialItemsCompanion({
@@ -6237,6 +6276,7 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
     this.textContent = const Value.absent(),
     this.duration = const Value.absent(),
     this.orderIndex = const Value.absent(),
+    this.isPublic = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -6250,6 +6290,7 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
     this.textContent = const Value.absent(),
     this.duration = const Value.absent(),
     this.orderIndex = const Value.absent(),
+    this.isPublic = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : courseId = Value(courseId),
@@ -6265,6 +6306,7 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
     Expression<String>? textContent,
     Expression<int>? duration,
     Expression<int>? orderIndex,
+    Expression<bool>? isPublic,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -6278,6 +6320,7 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
       if (textContent != null) 'text_content': textContent,
       if (duration != null) 'duration': duration,
       if (orderIndex != null) 'order_index': orderIndex,
+      if (isPublic != null) 'is_public': isPublic,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -6293,6 +6336,7 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
     Value<String?>? textContent,
     Value<int?>? duration,
     Value<int>? orderIndex,
+    Value<bool>? isPublic,
     Value<DateTime?>? createdAt,
     Value<DateTime?>? updatedAt,
   }) {
@@ -6306,6 +6350,7 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
       textContent: textContent ?? this.textContent,
       duration: duration ?? this.duration,
       orderIndex: orderIndex ?? this.orderIndex,
+      isPublic: isPublic ?? this.isPublic,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -6341,6 +6386,9 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
     if (orderIndex.present) {
       map['order_index'] = Variable<int>(orderIndex.value);
     }
+    if (isPublic.present) {
+      map['is_public'] = Variable<bool>(isPublic.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -6362,6 +6410,7 @@ class CourseMaterialItemsCompanion extends UpdateCompanion<CourseMaterialItem> {
           ..write('textContent: $textContent, ')
           ..write('duration: $duration, ')
           ..write('orderIndex: $orderIndex, ')
+          ..write('isPublic: $isPublic, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -12870,6 +12919,7 @@ typedef $$CourseMaterialItemsTableCreateCompanionBuilder =
       Value<String?> textContent,
       Value<int?> duration,
       Value<int> orderIndex,
+      Value<bool> isPublic,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
     });
@@ -12884,6 +12934,7 @@ typedef $$CourseMaterialItemsTableUpdateCompanionBuilder =
       Value<String?> textContent,
       Value<int?> duration,
       Value<int> orderIndex,
+      Value<bool> isPublic,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
     });
@@ -12973,6 +13024,11 @@ class $$CourseMaterialItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get isPublic => $composableBuilder(
+    column: $table.isPublic,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -13056,6 +13112,11 @@ class $$CourseMaterialItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isPublic => $composableBuilder(
+    column: $table.isPublic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -13130,6 +13191,9 @@ class $$CourseMaterialItemsTableAnnotationComposer
     column: $table.orderIndex,
     builder: (column) => column,
   );
+
+  GeneratedColumn<bool> get isPublic =>
+      $composableBuilder(column: $table.isPublic, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -13206,6 +13270,7 @@ class $$CourseMaterialItemsTableTableManager
                 Value<String?> textContent = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
                 Value<int> orderIndex = const Value.absent(),
+                Value<bool> isPublic = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
               }) => CourseMaterialItemsCompanion(
@@ -13218,6 +13283,7 @@ class $$CourseMaterialItemsTableTableManager
                 textContent: textContent,
                 duration: duration,
                 orderIndex: orderIndex,
+                isPublic: isPublic,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -13232,6 +13298,7 @@ class $$CourseMaterialItemsTableTableManager
                 Value<String?> textContent = const Value.absent(),
                 Value<int?> duration = const Value.absent(),
                 Value<int> orderIndex = const Value.absent(),
+                Value<bool> isPublic = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
               }) => CourseMaterialItemsCompanion.insert(
@@ -13244,6 +13311,7 @@ class $$CourseMaterialItemsTableTableManager
                 textContent: textContent,
                 duration: duration,
                 orderIndex: orderIndex,
+                isPublic: isPublic,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),

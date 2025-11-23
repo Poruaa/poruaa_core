@@ -8,6 +8,7 @@ class CourseMaterial {
   final String? textContent;
   final int? duration;
   final int orderIndex;
+  final bool isPublic;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -21,6 +22,7 @@ class CourseMaterial {
     this.textContent,
     this.duration,
     required this.orderIndex,
+    required this.isPublic,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -36,6 +38,7 @@ class CourseMaterial {
       textContent: json['text_content'] as String?,
       duration: json['duration'] as int?,
       orderIndex: json['order_index'] as int,
+      isPublic: json['is_public'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
@@ -52,6 +55,7 @@ class CourseMaterial {
       'text_content': textContent,
       'duration': duration,
       'order_index': orderIndex,
+      'is_public': isPublic,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -67,6 +71,7 @@ class CourseMaterial {
     String? textContent,
     int? duration,
     int? orderIndex,
+    bool? isPublic,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -80,6 +85,7 @@ class CourseMaterial {
       textContent: textContent ?? this.textContent,
       duration: duration ?? this.duration,
       orderIndex: orderIndex ?? this.orderIndex,
+      isPublic: isPublic ?? this.isPublic,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -94,6 +100,7 @@ class CreateCourseMaterialInput {
   final String? textContent;
   final int? duration;
   final int? orderIndex;
+  final bool? isPublic;
 
   CreateCourseMaterialInput({
     required this.title,
@@ -103,6 +110,7 @@ class CreateCourseMaterialInput {
     this.textContent,
     this.duration,
     this.orderIndex,
+    this.isPublic,
   });
 
   Map<String, dynamic> toJson() {
@@ -114,6 +122,7 @@ class CreateCourseMaterialInput {
       'text_content': textContent,
       'duration': duration,
       'order_index': orderIndex,
+      'is_public': isPublic,
     };
   }
 }
@@ -125,6 +134,7 @@ class UpdateCourseMaterialInput {
   final String? textContent;
   final int? duration;
   final int? orderIndex;
+  final bool? isPublic;
 
   UpdateCourseMaterialInput({
     this.title,
@@ -133,6 +143,7 @@ class UpdateCourseMaterialInput {
     this.textContent,
     this.duration,
     this.orderIndex,
+    this.isPublic,
   });
 
   Map<String, dynamic> toJson() {
@@ -143,6 +154,7 @@ class UpdateCourseMaterialInput {
     if (textContent != null) json['text_content'] = textContent;
     if (duration != null) json['duration'] = duration;
     if (orderIndex != null) json['order_index'] = orderIndex;
+    if (isPublic != null) json['is_public'] = isPublic;
     return json;
   }
 }
@@ -151,25 +163,17 @@ class MaterialOrder {
   final int materialId;
   final int orderIndex;
 
-  MaterialOrder({
-    required this.materialId,
-    required this.orderIndex,
-  });
+  MaterialOrder({required this.materialId, required this.orderIndex});
 
   Map<String, dynamic> toJson() {
-    return {
-      'material_id': materialId,
-      'order_index': orderIndex,
-    };
+    return {'material_id': materialId, 'order_index': orderIndex};
   }
 }
 
 class ReorderMaterialsInput {
   final List<MaterialOrder> materialOrders;
 
-  ReorderMaterialsInput({
-    required this.materialOrders,
-  });
+  ReorderMaterialsInput({required this.materialOrders});
 
   Map<String, dynamic> toJson() {
     return {

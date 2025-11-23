@@ -156,6 +156,7 @@ class CourseMaterialItems extends Table {
   TextColumn get textContent => text().nullable()();
   IntColumn get duration => integer().nullable()();
   IntColumn get orderIndex => integer().withDefault(Constant(0))();
+  BoolColumn get isPublic => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().nullable()();
   DateTimeColumn get updatedAt => dateTime().nullable()();
 }
