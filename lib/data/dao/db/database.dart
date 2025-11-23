@@ -186,6 +186,43 @@ class WithdrawalPaymentMethodItems extends Table {
   DateTimeColumn get updatedAt => dateTime().nullable()();
 }
 
+class PlaylistItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get teacherId => integer().customConstraint('NOT NULL')();
+  TextColumn get name => text().customConstraint('NOT NULL')();
+  TextColumn get description => text().nullable()();
+  TextColumn get thumbnail => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().nullable()();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+}
+
+class VideoItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get playlistId => integer().references(PlaylistItems, #id)();
+  TextColumn get title => text().customConstraint('NOT NULL')();
+  TextColumn get description => text().nullable()();
+  TextColumn get videoType =>
+      text().customConstraint('NOT NULL')(); // 'live', 'pre-recorded'
+  TextColumn get cdnType => text().customConstraint('NOT NULL')();
+  TextColumn get videoUrl => text().customConstraint('NOT NULL')();
+  TextColumn get thumbnail => text().nullable()();
+  IntColumn get duration => integer().nullable()();
+  IntColumn get orderIndex => integer().withDefault(Constant(0))();
+  BoolColumn get isPublic => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt => dateTime().nullable()();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+}
+
+class CoursePlaylistItems extends Table {
+  IntColumn get courseId => integer().references(CourseItems, #id)();
+  IntColumn get playlistId => integer().references(PlaylistItems, #id)();
+  IntColumn get orderIndex => integer().withDefault(Constant(0))();
+  DateTimeColumn get createdAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {courseId, playlistId};
+}
+
 class WithdrawalRequestItems extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get walletId => integer().customConstraint('NOT NULL')();
@@ -212,6 +249,9 @@ class WithdrawalRequestItems extends Table {
     ShortExamItems,
     FreeExamItems,
     CourseMaterialItems,
+    PlaylistItems,
+    VideoItems,
+    CoursePlaylistItems,
     WithdrawalPaymentMethodItems,
     WithdrawalRequestItems,
   ],
@@ -270,10 +310,16 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(withdrawalPaymentMethodItems);
           await m.createTable(withdrawalRequestItems);
         }
+        if (from < 6) {
+          // Add playlist tables
+          await m.createTable(playlistItems);
+          await m.createTable(videoItems);
+          await m.createTable(coursePlaylistItems);
+        }
       },
     );
   }
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 }
