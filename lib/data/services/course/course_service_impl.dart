@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:poruaa_core/data/services/authorized_api/authorized_api_service.dart';
 import 'package:poruaa_core/data/services/course/course_service.dart';
+import 'package:poruaa_core/data/services/course/model/course_extension_invoice_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_model.dart';
 import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
@@ -428,6 +429,38 @@ class CoursesServiceImpl extends CoursesService {
         }
       case Err():
         return Result.error("Failed to get publish cost info");
+    }
+  }
+
+  @override
+  Future<Result<CourseExtensionInvoiceDTO>> getExtensionInvoice(
+    int teacherId,
+    int courseId,
+    CourseExpirationInput input,
+  ) async {
+    final result = await _apiService.post(
+      "teachers/$teacherId/courses/$courseId/extension-invoice",
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(input.toJson()),
+    );
+
+    switch (result) {
+      case Ok():
+        final body = result.value.body;
+        final code = result.value.statusCode;
+        if (code == 200) {
+          final jsonBody = jsonDecode(body) as Map<String, dynamic>;
+          final invoice = CourseExtensionInvoiceDTO.fromJson(jsonBody);
+          return Result.ok(invoice);
+        } else if (code == 401) {
+          return Result.error("Access denied");
+        } else if (code == 400) {
+          return Result.error(body);
+        } else {
+          return Result.error(body);
+        }
+      case Err():
+        return Result.error("Failed to get extension invoice");
     }
   }
 }

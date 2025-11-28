@@ -19,6 +19,8 @@ Core business logic, models, and repositories for the Poruaa education platform.
 
 👤 **[Teacher Profile Integration Guide](./TEACHER_PROFILE_GUIDE.md)** - Complete guide for integrating Teacher Profile feature in your app
 
+💰 **[Course Cost & Extension Invoice Guide](./COURSE_COST_EXTENSION_GUIDE.md)** - Reference for course publish cost info and extension invoice features
+
 ## Installation
 
 Add this to your package's `pubspec.yaml` file:

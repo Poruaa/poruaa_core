@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:poruaa_core/data/repositories/course/course_repository.dart';
 import 'package:poruaa_core/data/repositories/user/user_repository.dart';
 import 'package:poruaa_core/data/services/course/course_service.dart';
+import 'package:poruaa_core/data/services/course/model/course_extension_invoice_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
 import 'package:poruaa_core/data/dao/course/course_dao.dart';
 import 'package:poruaa_core/domain/models/course/course.dart';
@@ -426,6 +427,18 @@ class CourseRepositoryImpl extends CourseRepository {
     return await _coursesService.getPublishCostInfo(
       _userRepository.getCurrentUserId,
       courseId,
+    );
+  }
+
+  @override
+  Future<Result<CourseExtensionInvoiceDTO>> getExtensionInvoice(
+    int courseId,
+    CourseExpirationInput input,
+  ) async {
+    return await _coursesService.getExtensionInvoice(
+      _userRepository.getCurrentUserId,
+      courseId,
+      input,
     );
   }
 
