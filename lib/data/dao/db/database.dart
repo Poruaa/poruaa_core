@@ -223,6 +223,27 @@ class CoursePlaylistItems extends Table {
   Set<Column> get primaryKey => {courseId, playlistId};
 }
 
+class SeriesItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get teacherId => integer().customConstraint('NOT NULL')();
+  TextColumn get name => text().customConstraint('NOT NULL')();
+  TextColumn get description => text().nullable()();
+  TextColumn get thumbnail => text().nullable()();
+  IntColumn get orderIndex => integer().withDefault(Constant(0))();
+  DateTimeColumn get createdAt => dateTime().nullable()();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+}
+
+class CourseSeriesItems extends Table {
+  IntColumn get seriesId => integer().references(SeriesItems, #id)();
+  IntColumn get courseId => integer().references(CourseItems, #id)();
+  IntColumn get orderIndex => integer().withDefault(Constant(0))();
+  DateTimeColumn get createdAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {seriesId, courseId};
+}
+
 class WithdrawalRequestItems extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get walletId => integer().customConstraint('NOT NULL')();
@@ -252,6 +273,8 @@ class WithdrawalRequestItems extends Table {
     PlaylistItems,
     VideoItems,
     CoursePlaylistItems,
+    SeriesItems,
+    CourseSeriesItems,
     WithdrawalPaymentMethodItems,
     WithdrawalRequestItems,
   ],
@@ -316,10 +339,15 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(videoItems);
           await m.createTable(coursePlaylistItems);
         }
+        if (from < 7) {
+          // Add series tables
+          await m.createTable(seriesItems);
+          await m.createTable(courseSeriesItems);
+        }
       },
     );
   }
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 }

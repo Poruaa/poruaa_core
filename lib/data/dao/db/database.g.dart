@@ -7971,6 +7971,845 @@ class CoursePlaylistItemsCompanion extends UpdateCompanion<CoursePlaylistItem> {
   }
 }
 
+class $SeriesItemsTable extends SeriesItems
+    with TableInfo<$SeriesItemsTable, SeriesItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SeriesItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _teacherIdMeta = const VerificationMeta(
+    'teacherId',
+  );
+  @override
+  late final GeneratedColumn<int> teacherId = GeneratedColumn<int>(
+    'teacher_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _thumbnailMeta = const VerificationMeta(
+    'thumbnail',
+  );
+  @override
+  late final GeneratedColumn<String> thumbnail = GeneratedColumn<String>(
+    'thumbnail',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _orderIndexMeta = const VerificationMeta(
+    'orderIndex',
+  );
+  @override
+  late final GeneratedColumn<int> orderIndex = GeneratedColumn<int>(
+    'order_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    teacherId,
+    name,
+    description,
+    thumbnail,
+    orderIndex,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'series_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SeriesItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('teacher_id')) {
+      context.handle(
+        _teacherIdMeta,
+        teacherId.isAcceptableOrUnknown(data['teacher_id']!, _teacherIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_teacherIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('thumbnail')) {
+      context.handle(
+        _thumbnailMeta,
+        thumbnail.isAcceptableOrUnknown(data['thumbnail']!, _thumbnailMeta),
+      );
+    }
+    if (data.containsKey('order_index')) {
+      context.handle(
+        _orderIndexMeta,
+        orderIndex.isAcceptableOrUnknown(data['order_index']!, _orderIndexMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SeriesItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SeriesItem(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      teacherId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}teacher_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      thumbnail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}thumbnail'],
+      ),
+      orderIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}order_index'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+    );
+  }
+
+  @override
+  $SeriesItemsTable createAlias(String alias) {
+    return $SeriesItemsTable(attachedDatabase, alias);
+  }
+}
+
+class SeriesItem extends DataClass implements Insertable<SeriesItem> {
+  final int id;
+  final int teacherId;
+  final String name;
+  final String? description;
+  final String? thumbnail;
+  final int orderIndex;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  const SeriesItem({
+    required this.id,
+    required this.teacherId,
+    required this.name,
+    this.description,
+    this.thumbnail,
+    required this.orderIndex,
+    this.createdAt,
+    this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['teacher_id'] = Variable<int>(teacherId);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || thumbnail != null) {
+      map['thumbnail'] = Variable<String>(thumbnail);
+    }
+    map['order_index'] = Variable<int>(orderIndex);
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    return map;
+  }
+
+  SeriesItemsCompanion toCompanion(bool nullToAbsent) {
+    return SeriesItemsCompanion(
+      id: Value(id),
+      teacherId: Value(teacherId),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      thumbnail: thumbnail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(thumbnail),
+      orderIndex: Value(orderIndex),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+    );
+  }
+
+  factory SeriesItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SeriesItem(
+      id: serializer.fromJson<int>(json['id']),
+      teacherId: serializer.fromJson<int>(json['teacherId']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      thumbnail: serializer.fromJson<String?>(json['thumbnail']),
+      orderIndex: serializer.fromJson<int>(json['orderIndex']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'teacherId': serializer.toJson<int>(teacherId),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'thumbnail': serializer.toJson<String?>(thumbnail),
+      'orderIndex': serializer.toJson<int>(orderIndex),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+    };
+  }
+
+  SeriesItem copyWith({
+    int? id,
+    int? teacherId,
+    String? name,
+    Value<String?> description = const Value.absent(),
+    Value<String?> thumbnail = const Value.absent(),
+    int? orderIndex,
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
+  }) => SeriesItem(
+    id: id ?? this.id,
+    teacherId: teacherId ?? this.teacherId,
+    name: name ?? this.name,
+    description: description.present ? description.value : this.description,
+    thumbnail: thumbnail.present ? thumbnail.value : this.thumbnail,
+    orderIndex: orderIndex ?? this.orderIndex,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+  );
+  SeriesItem copyWithCompanion(SeriesItemsCompanion data) {
+    return SeriesItem(
+      id: data.id.present ? data.id.value : this.id,
+      teacherId: data.teacherId.present ? data.teacherId.value : this.teacherId,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      thumbnail: data.thumbnail.present ? data.thumbnail.value : this.thumbnail,
+      orderIndex: data.orderIndex.present
+          ? data.orderIndex.value
+          : this.orderIndex,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SeriesItem(')
+          ..write('id: $id, ')
+          ..write('teacherId: $teacherId, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('thumbnail: $thumbnail, ')
+          ..write('orderIndex: $orderIndex, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    teacherId,
+    name,
+    description,
+    thumbnail,
+    orderIndex,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SeriesItem &&
+          other.id == this.id &&
+          other.teacherId == this.teacherId &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.thumbnail == this.thumbnail &&
+          other.orderIndex == this.orderIndex &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SeriesItemsCompanion extends UpdateCompanion<SeriesItem> {
+  final Value<int> id;
+  final Value<int> teacherId;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<String?> thumbnail;
+  final Value<int> orderIndex;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
+  const SeriesItemsCompanion({
+    this.id = const Value.absent(),
+    this.teacherId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.thumbnail = const Value.absent(),
+    this.orderIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  SeriesItemsCompanion.insert({
+    this.id = const Value.absent(),
+    required int teacherId,
+    required String name,
+    this.description = const Value.absent(),
+    this.thumbnail = const Value.absent(),
+    this.orderIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : teacherId = Value(teacherId),
+       name = Value(name);
+  static Insertable<SeriesItem> custom({
+    Expression<int>? id,
+    Expression<int>? teacherId,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? thumbnail,
+    Expression<int>? orderIndex,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (teacherId != null) 'teacher_id': teacherId,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (thumbnail != null) 'thumbnail': thumbnail,
+      if (orderIndex != null) 'order_index': orderIndex,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  SeriesItemsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? teacherId,
+    Value<String>? name,
+    Value<String?>? description,
+    Value<String?>? thumbnail,
+    Value<int>? orderIndex,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
+  }) {
+    return SeriesItemsCompanion(
+      id: id ?? this.id,
+      teacherId: teacherId ?? this.teacherId,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      thumbnail: thumbnail ?? this.thumbnail,
+      orderIndex: orderIndex ?? this.orderIndex,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (teacherId.present) {
+      map['teacher_id'] = Variable<int>(teacherId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (thumbnail.present) {
+      map['thumbnail'] = Variable<String>(thumbnail.value);
+    }
+    if (orderIndex.present) {
+      map['order_index'] = Variable<int>(orderIndex.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SeriesItemsCompanion(')
+          ..write('id: $id, ')
+          ..write('teacherId: $teacherId, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('thumbnail: $thumbnail, ')
+          ..write('orderIndex: $orderIndex, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CourseSeriesItemsTable extends CourseSeriesItems
+    with TableInfo<$CourseSeriesItemsTable, CourseSeriesItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CourseSeriesItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _seriesIdMeta = const VerificationMeta(
+    'seriesId',
+  );
+  @override
+  late final GeneratedColumn<int> seriesId = GeneratedColumn<int>(
+    'series_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES series_items (id)',
+    ),
+  );
+  static const VerificationMeta _courseIdMeta = const VerificationMeta(
+    'courseId',
+  );
+  @override
+  late final GeneratedColumn<int> courseId = GeneratedColumn<int>(
+    'course_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES course_items (id)',
+    ),
+  );
+  static const VerificationMeta _orderIndexMeta = const VerificationMeta(
+    'orderIndex',
+  );
+  @override
+  late final GeneratedColumn<int> orderIndex = GeneratedColumn<int>(
+    'order_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    seriesId,
+    courseId,
+    orderIndex,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'course_series_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CourseSeriesItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('series_id')) {
+      context.handle(
+        _seriesIdMeta,
+        seriesId.isAcceptableOrUnknown(data['series_id']!, _seriesIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_seriesIdMeta);
+    }
+    if (data.containsKey('course_id')) {
+      context.handle(
+        _courseIdMeta,
+        courseId.isAcceptableOrUnknown(data['course_id']!, _courseIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_courseIdMeta);
+    }
+    if (data.containsKey('order_index')) {
+      context.handle(
+        _orderIndexMeta,
+        orderIndex.isAcceptableOrUnknown(data['order_index']!, _orderIndexMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {seriesId, courseId};
+  @override
+  CourseSeriesItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CourseSeriesItem(
+      seriesId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}series_id'],
+      )!,
+      courseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}course_id'],
+      )!,
+      orderIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}order_index'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+    );
+  }
+
+  @override
+  $CourseSeriesItemsTable createAlias(String alias) {
+    return $CourseSeriesItemsTable(attachedDatabase, alias);
+  }
+}
+
+class CourseSeriesItem extends DataClass
+    implements Insertable<CourseSeriesItem> {
+  final int seriesId;
+  final int courseId;
+  final int orderIndex;
+  final DateTime? createdAt;
+  const CourseSeriesItem({
+    required this.seriesId,
+    required this.courseId,
+    required this.orderIndex,
+    this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['series_id'] = Variable<int>(seriesId);
+    map['course_id'] = Variable<int>(courseId);
+    map['order_index'] = Variable<int>(orderIndex);
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    return map;
+  }
+
+  CourseSeriesItemsCompanion toCompanion(bool nullToAbsent) {
+    return CourseSeriesItemsCompanion(
+      seriesId: Value(seriesId),
+      courseId: Value(courseId),
+      orderIndex: Value(orderIndex),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+    );
+  }
+
+  factory CourseSeriesItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CourseSeriesItem(
+      seriesId: serializer.fromJson<int>(json['seriesId']),
+      courseId: serializer.fromJson<int>(json['courseId']),
+      orderIndex: serializer.fromJson<int>(json['orderIndex']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'seriesId': serializer.toJson<int>(seriesId),
+      'courseId': serializer.toJson<int>(courseId),
+      'orderIndex': serializer.toJson<int>(orderIndex),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+    };
+  }
+
+  CourseSeriesItem copyWith({
+    int? seriesId,
+    int? courseId,
+    int? orderIndex,
+    Value<DateTime?> createdAt = const Value.absent(),
+  }) => CourseSeriesItem(
+    seriesId: seriesId ?? this.seriesId,
+    courseId: courseId ?? this.courseId,
+    orderIndex: orderIndex ?? this.orderIndex,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+  );
+  CourseSeriesItem copyWithCompanion(CourseSeriesItemsCompanion data) {
+    return CourseSeriesItem(
+      seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
+      courseId: data.courseId.present ? data.courseId.value : this.courseId,
+      orderIndex: data.orderIndex.present
+          ? data.orderIndex.value
+          : this.orderIndex,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CourseSeriesItem(')
+          ..write('seriesId: $seriesId, ')
+          ..write('courseId: $courseId, ')
+          ..write('orderIndex: $orderIndex, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(seriesId, courseId, orderIndex, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CourseSeriesItem &&
+          other.seriesId == this.seriesId &&
+          other.courseId == this.courseId &&
+          other.orderIndex == this.orderIndex &&
+          other.createdAt == this.createdAt);
+}
+
+class CourseSeriesItemsCompanion extends UpdateCompanion<CourseSeriesItem> {
+  final Value<int> seriesId;
+  final Value<int> courseId;
+  final Value<int> orderIndex;
+  final Value<DateTime?> createdAt;
+  final Value<int> rowid;
+  const CourseSeriesItemsCompanion({
+    this.seriesId = const Value.absent(),
+    this.courseId = const Value.absent(),
+    this.orderIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CourseSeriesItemsCompanion.insert({
+    required int seriesId,
+    required int courseId,
+    this.orderIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : seriesId = Value(seriesId),
+       courseId = Value(courseId);
+  static Insertable<CourseSeriesItem> custom({
+    Expression<int>? seriesId,
+    Expression<int>? courseId,
+    Expression<int>? orderIndex,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (seriesId != null) 'series_id': seriesId,
+      if (courseId != null) 'course_id': courseId,
+      if (orderIndex != null) 'order_index': orderIndex,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CourseSeriesItemsCompanion copyWith({
+    Value<int>? seriesId,
+    Value<int>? courseId,
+    Value<int>? orderIndex,
+    Value<DateTime?>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return CourseSeriesItemsCompanion(
+      seriesId: seriesId ?? this.seriesId,
+      courseId: courseId ?? this.courseId,
+      orderIndex: orderIndex ?? this.orderIndex,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (seriesId.present) {
+      map['series_id'] = Variable<int>(seriesId.value);
+    }
+    if (courseId.present) {
+      map['course_id'] = Variable<int>(courseId.value);
+    }
+    if (orderIndex.present) {
+      map['order_index'] = Variable<int>(orderIndex.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CourseSeriesItemsCompanion(')
+          ..write('seriesId: $seriesId, ')
+          ..write('courseId: $courseId, ')
+          ..write('orderIndex: $orderIndex, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $WithdrawalPaymentMethodItemsTable extends WithdrawalPaymentMethodItems
     with
         TableInfo<
@@ -9744,6 +10583,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $VideoItemsTable videoItems = $VideoItemsTable(this);
   late final $CoursePlaylistItemsTable coursePlaylistItems =
       $CoursePlaylistItemsTable(this);
+  late final $SeriesItemsTable seriesItems = $SeriesItemsTable(this);
+  late final $CourseSeriesItemsTable courseSeriesItems =
+      $CourseSeriesItemsTable(this);
   late final $WithdrawalPaymentMethodItemsTable withdrawalPaymentMethodItems =
       $WithdrawalPaymentMethodItemsTable(this);
   late final $WithdrawalRequestItemsTable withdrawalRequestItems =
@@ -9765,6 +10607,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     playlistItems,
     videoItems,
     coursePlaylistItems,
+    seriesItems,
+    courseSeriesItems,
     withdrawalPaymentMethodItems,
     withdrawalRequestItems,
   ];
@@ -11701,6 +12545,30 @@ final class $$CourseItemsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$CourseSeriesItemsTable, List<CourseSeriesItem>>
+  _courseSeriesItemsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.courseSeriesItems,
+        aliasName: $_aliasNameGenerator(
+          db.courseItems.id,
+          db.courseSeriesItems.courseId,
+        ),
+      );
+
+  $$CourseSeriesItemsTableProcessedTableManager get courseSeriesItemsRefs {
+    final manager = $$CourseSeriesItemsTableTableManager(
+      $_db,
+      $_db.courseSeriesItems,
+    ).filter((f) => f.courseId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _courseSeriesItemsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CourseItemsTableFilterComposer
@@ -11906,6 +12774,31 @@ class $$CourseItemsTableFilterComposer
           }) => $$CoursePlaylistItemsTableFilterComposer(
             $db: $db,
             $table: $db.coursePlaylistItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> courseSeriesItemsRefs(
+    Expression<bool> Function($$CourseSeriesItemsTableFilterComposer f) f,
+  ) {
+    final $$CourseSeriesItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.courseSeriesItems,
+      getReferencedColumn: (t) => t.courseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseSeriesItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.courseSeriesItems,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12249,6 +13142,32 @@ class $$CourseItemsTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> courseSeriesItemsRefs<T extends Object>(
+    Expression<T> Function($$CourseSeriesItemsTableAnnotationComposer a) f,
+  ) {
+    final $$CourseSeriesItemsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.courseSeriesItems,
+          getReferencedColumn: (t) => t.courseId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$CourseSeriesItemsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.courseSeriesItems,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$CourseItemsTableTableManager
@@ -12269,6 +13188,7 @@ class $$CourseItemsTableTableManager
             bool courseExamItemsRefs,
             bool courseMaterialItemsRefs,
             bool coursePlaylistItemsRefs,
+            bool courseSeriesItemsRefs,
           })
         > {
   $$CourseItemsTableTableManager(_$AppDatabase db, $CourseItemsTable table)
@@ -12392,6 +13312,7 @@ class $$CourseItemsTableTableManager
                 courseExamItemsRefs = false,
                 courseMaterialItemsRefs = false,
                 coursePlaylistItemsRefs = false,
+                courseSeriesItemsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -12399,6 +13320,7 @@ class $$CourseItemsTableTableManager
                     if (courseExamItemsRefs) db.courseExamItems,
                     if (courseMaterialItemsRefs) db.courseMaterialItems,
                     if (coursePlaylistItemsRefs) db.coursePlaylistItems,
+                    if (courseSeriesItemsRefs) db.courseSeriesItems,
                   ],
                   addJoins:
                       <
@@ -12499,6 +13421,27 @@ class $$CourseItemsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (courseSeriesItemsRefs)
+                        await $_getPrefetchedData<
+                          CourseItem,
+                          $CourseItemsTable,
+                          CourseSeriesItem
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CourseItemsTableReferences
+                              ._courseSeriesItemsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CourseItemsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).courseSeriesItemsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.courseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -12524,6 +13467,7 @@ typedef $$CourseItemsTableProcessedTableManager =
         bool courseExamItemsRefs,
         bool courseMaterialItemsRefs,
         bool coursePlaylistItemsRefs,
+        bool courseSeriesItemsRefs,
       })
     >;
 typedef $$CourseExamItemsTableCreateCompanionBuilder =
@@ -16386,6 +17330,779 @@ typedef $$CoursePlaylistItemsTableProcessedTableManager =
       CoursePlaylistItem,
       PrefetchHooks Function({bool courseId, bool playlistId})
     >;
+typedef $$SeriesItemsTableCreateCompanionBuilder =
+    SeriesItemsCompanion Function({
+      Value<int> id,
+      required int teacherId,
+      required String name,
+      Value<String?> description,
+      Value<String?> thumbnail,
+      Value<int> orderIndex,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+    });
+typedef $$SeriesItemsTableUpdateCompanionBuilder =
+    SeriesItemsCompanion Function({
+      Value<int> id,
+      Value<int> teacherId,
+      Value<String> name,
+      Value<String?> description,
+      Value<String?> thumbnail,
+      Value<int> orderIndex,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+    });
+
+final class $$SeriesItemsTableReferences
+    extends BaseReferences<_$AppDatabase, $SeriesItemsTable, SeriesItem> {
+  $$SeriesItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$CourseSeriesItemsTable, List<CourseSeriesItem>>
+  _courseSeriesItemsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.courseSeriesItems,
+        aliasName: $_aliasNameGenerator(
+          db.seriesItems.id,
+          db.courseSeriesItems.seriesId,
+        ),
+      );
+
+  $$CourseSeriesItemsTableProcessedTableManager get courseSeriesItemsRefs {
+    final manager = $$CourseSeriesItemsTableTableManager(
+      $_db,
+      $_db.courseSeriesItems,
+    ).filter((f) => f.seriesId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _courseSeriesItemsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$SeriesItemsTableFilterComposer
+    extends Composer<_$AppDatabase, $SeriesItemsTable> {
+  $$SeriesItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get teacherId => $composableBuilder(
+    column: $table.teacherId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get thumbnail => $composableBuilder(
+    column: $table.thumbnail,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> courseSeriesItemsRefs(
+    Expression<bool> Function($$CourseSeriesItemsTableFilterComposer f) f,
+  ) {
+    final $$CourseSeriesItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.courseSeriesItems,
+      getReferencedColumn: (t) => t.seriesId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseSeriesItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.courseSeriesItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SeriesItemsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SeriesItemsTable> {
+  $$SeriesItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get teacherId => $composableBuilder(
+    column: $table.teacherId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get thumbnail => $composableBuilder(
+    column: $table.thumbnail,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SeriesItemsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SeriesItemsTable> {
+  $$SeriesItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get teacherId =>
+      $composableBuilder(column: $table.teacherId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get thumbnail =>
+      $composableBuilder(column: $table.thumbnail, builder: (column) => column);
+
+  GeneratedColumn<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> courseSeriesItemsRefs<T extends Object>(
+    Expression<T> Function($$CourseSeriesItemsTableAnnotationComposer a) f,
+  ) {
+    final $$CourseSeriesItemsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.courseSeriesItems,
+          getReferencedColumn: (t) => t.seriesId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$CourseSeriesItemsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.courseSeriesItems,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$SeriesItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SeriesItemsTable,
+          SeriesItem,
+          $$SeriesItemsTableFilterComposer,
+          $$SeriesItemsTableOrderingComposer,
+          $$SeriesItemsTableAnnotationComposer,
+          $$SeriesItemsTableCreateCompanionBuilder,
+          $$SeriesItemsTableUpdateCompanionBuilder,
+          (SeriesItem, $$SeriesItemsTableReferences),
+          SeriesItem,
+          PrefetchHooks Function({bool courseSeriesItemsRefs})
+        > {
+  $$SeriesItemsTableTableManager(_$AppDatabase db, $SeriesItemsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SeriesItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SeriesItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SeriesItemsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> teacherId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> thumbnail = const Value.absent(),
+                Value<int> orderIndex = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+              }) => SeriesItemsCompanion(
+                id: id,
+                teacherId: teacherId,
+                name: name,
+                description: description,
+                thumbnail: thumbnail,
+                orderIndex: orderIndex,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int teacherId,
+                required String name,
+                Value<String?> description = const Value.absent(),
+                Value<String?> thumbnail = const Value.absent(),
+                Value<int> orderIndex = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+              }) => SeriesItemsCompanion.insert(
+                id: id,
+                teacherId: teacherId,
+                name: name,
+                description: description,
+                thumbnail: thumbnail,
+                orderIndex: orderIndex,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SeriesItemsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({courseSeriesItemsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (courseSeriesItemsRefs) db.courseSeriesItems,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (courseSeriesItemsRefs)
+                    await $_getPrefetchedData<
+                      SeriesItem,
+                      $SeriesItemsTable,
+                      CourseSeriesItem
+                    >(
+                      currentTable: table,
+                      referencedTable: $$SeriesItemsTableReferences
+                          ._courseSeriesItemsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$SeriesItemsTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).courseSeriesItemsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.seriesId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SeriesItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SeriesItemsTable,
+      SeriesItem,
+      $$SeriesItemsTableFilterComposer,
+      $$SeriesItemsTableOrderingComposer,
+      $$SeriesItemsTableAnnotationComposer,
+      $$SeriesItemsTableCreateCompanionBuilder,
+      $$SeriesItemsTableUpdateCompanionBuilder,
+      (SeriesItem, $$SeriesItemsTableReferences),
+      SeriesItem,
+      PrefetchHooks Function({bool courseSeriesItemsRefs})
+    >;
+typedef $$CourseSeriesItemsTableCreateCompanionBuilder =
+    CourseSeriesItemsCompanion Function({
+      required int seriesId,
+      required int courseId,
+      Value<int> orderIndex,
+      Value<DateTime?> createdAt,
+      Value<int> rowid,
+    });
+typedef $$CourseSeriesItemsTableUpdateCompanionBuilder =
+    CourseSeriesItemsCompanion Function({
+      Value<int> seriesId,
+      Value<int> courseId,
+      Value<int> orderIndex,
+      Value<DateTime?> createdAt,
+      Value<int> rowid,
+    });
+
+final class $$CourseSeriesItemsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $CourseSeriesItemsTable,
+          CourseSeriesItem
+        > {
+  $$CourseSeriesItemsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $SeriesItemsTable _seriesIdTable(_$AppDatabase db) =>
+      db.seriesItems.createAlias(
+        $_aliasNameGenerator(db.courseSeriesItems.seriesId, db.seriesItems.id),
+      );
+
+  $$SeriesItemsTableProcessedTableManager get seriesId {
+    final $_column = $_itemColumn<int>('series_id')!;
+
+    final manager = $$SeriesItemsTableTableManager(
+      $_db,
+      $_db.seriesItems,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_seriesIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CourseItemsTable _courseIdTable(_$AppDatabase db) =>
+      db.courseItems.createAlias(
+        $_aliasNameGenerator(db.courseSeriesItems.courseId, db.courseItems.id),
+      );
+
+  $$CourseItemsTableProcessedTableManager get courseId {
+    final $_column = $_itemColumn<int>('course_id')!;
+
+    final manager = $$CourseItemsTableTableManager(
+      $_db,
+      $_db.courseItems,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_courseIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$CourseSeriesItemsTableFilterComposer
+    extends Composer<_$AppDatabase, $CourseSeriesItemsTable> {
+  $$CourseSeriesItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$SeriesItemsTableFilterComposer get seriesId {
+    final $$SeriesItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.seriesItems,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeriesItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.seriesItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CourseItemsTableFilterComposer get courseId {
+    final $$CourseItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.courseId,
+      referencedTable: $db.courseItems,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.courseItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CourseSeriesItemsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CourseSeriesItemsTable> {
+  $$CourseSeriesItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SeriesItemsTableOrderingComposer get seriesId {
+    final $$SeriesItemsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.seriesItems,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeriesItemsTableOrderingComposer(
+            $db: $db,
+            $table: $db.seriesItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CourseItemsTableOrderingComposer get courseId {
+    final $$CourseItemsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.courseId,
+      referencedTable: $db.courseItems,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseItemsTableOrderingComposer(
+            $db: $db,
+            $table: $db.courseItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CourseSeriesItemsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CourseSeriesItemsTable> {
+  $$CourseSeriesItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$SeriesItemsTableAnnotationComposer get seriesId {
+    final $$SeriesItemsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.seriesId,
+      referencedTable: $db.seriesItems,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SeriesItemsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.seriesItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CourseItemsTableAnnotationComposer get courseId {
+    final $$CourseItemsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.courseId,
+      referencedTable: $db.courseItems,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CourseItemsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.courseItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CourseSeriesItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CourseSeriesItemsTable,
+          CourseSeriesItem,
+          $$CourseSeriesItemsTableFilterComposer,
+          $$CourseSeriesItemsTableOrderingComposer,
+          $$CourseSeriesItemsTableAnnotationComposer,
+          $$CourseSeriesItemsTableCreateCompanionBuilder,
+          $$CourseSeriesItemsTableUpdateCompanionBuilder,
+          (CourseSeriesItem, $$CourseSeriesItemsTableReferences),
+          CourseSeriesItem,
+          PrefetchHooks Function({bool seriesId, bool courseId})
+        > {
+  $$CourseSeriesItemsTableTableManager(
+    _$AppDatabase db,
+    $CourseSeriesItemsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CourseSeriesItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CourseSeriesItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CourseSeriesItemsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> seriesId = const Value.absent(),
+                Value<int> courseId = const Value.absent(),
+                Value<int> orderIndex = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CourseSeriesItemsCompanion(
+                seriesId: seriesId,
+                courseId: courseId,
+                orderIndex: orderIndex,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int seriesId,
+                required int courseId,
+                Value<int> orderIndex = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CourseSeriesItemsCompanion.insert(
+                seriesId: seriesId,
+                courseId: courseId,
+                orderIndex: orderIndex,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$CourseSeriesItemsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({seriesId = false, courseId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (seriesId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.seriesId,
+                                referencedTable:
+                                    $$CourseSeriesItemsTableReferences
+                                        ._seriesIdTable(db),
+                                referencedColumn:
+                                    $$CourseSeriesItemsTableReferences
+                                        ._seriesIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (courseId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.courseId,
+                                referencedTable:
+                                    $$CourseSeriesItemsTableReferences
+                                        ._courseIdTable(db),
+                                referencedColumn:
+                                    $$CourseSeriesItemsTableReferences
+                                        ._courseIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$CourseSeriesItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CourseSeriesItemsTable,
+      CourseSeriesItem,
+      $$CourseSeriesItemsTableFilterComposer,
+      $$CourseSeriesItemsTableOrderingComposer,
+      $$CourseSeriesItemsTableAnnotationComposer,
+      $$CourseSeriesItemsTableCreateCompanionBuilder,
+      $$CourseSeriesItemsTableUpdateCompanionBuilder,
+      (CourseSeriesItem, $$CourseSeriesItemsTableReferences),
+      CourseSeriesItem,
+      PrefetchHooks Function({bool seriesId, bool courseId})
+    >;
 typedef $$WithdrawalPaymentMethodItemsTableCreateCompanionBuilder =
     WithdrawalPaymentMethodItemsCompanion Function({
       Value<int> id,
@@ -17233,6 +18950,10 @@ class $AppDatabaseManager {
       $$VideoItemsTableTableManager(_db, _db.videoItems);
   $$CoursePlaylistItemsTableTableManager get coursePlaylistItems =>
       $$CoursePlaylistItemsTableTableManager(_db, _db.coursePlaylistItems);
+  $$SeriesItemsTableTableManager get seriesItems =>
+      $$SeriesItemsTableTableManager(_db, _db.seriesItems);
+  $$CourseSeriesItemsTableTableManager get courseSeriesItems =>
+      $$CourseSeriesItemsTableTableManager(_db, _db.courseSeriesItems);
   $$WithdrawalPaymentMethodItemsTableTableManager
   get withdrawalPaymentMethodItems =>
       $$WithdrawalPaymentMethodItemsTableTableManager(
