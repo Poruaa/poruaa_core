@@ -9,6 +9,8 @@ class CoursePublishCostInfoDTO {
   final double targetCoursePrice;
   final double currentCoursePrice;
   final bool isPriceValid;
+  final bool canPublish;
+  final String message;
 
   CoursePublishCostInfoDTO({
     required this.courseId,
@@ -21,6 +23,8 @@ class CoursePublishCostInfoDTO {
     required this.targetCoursePrice,
     required this.currentCoursePrice,
     required this.isPriceValid,
+    required this.canPublish,
+    required this.message,
   });
 
   factory CoursePublishCostInfoDTO.fromJson(Map<String, dynamic> json) {
@@ -35,6 +39,8 @@ class CoursePublishCostInfoDTO {
       targetCoursePrice: (json['target_course_price'] as num).toDouble(),
       currentCoursePrice: (json['current_course_price'] as num).toDouble(),
       isPriceValid: json['is_price_valid'] as bool,
+      canPublish: json['can_publish'] as bool,
+      message: json['message'] as String,
     );
   }
 
@@ -50,6 +56,8 @@ class CoursePublishCostInfoDTO {
       'target_course_price': targetCoursePrice,
       'current_course_price': currentCoursePrice,
       'is_price_valid': isPriceValid,
+      'can_publish': canPublish,
+      'message': message,
     };
   }
 }
