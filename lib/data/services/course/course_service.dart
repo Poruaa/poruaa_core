@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:poruaa_core/data/services/course/model/course_model.dart';
+import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
 import 'package:poruaa_core/utils/result.dart';
 
@@ -51,6 +52,11 @@ abstract class CoursesService {
 
   Future<Result<CourseModel>> publishCourse(int teacherId, int id);
   Future<Result<CourseModel>> unPublishCourse(int teacherId, int id);
+
+  Future<Result<CoursePublishCostInfoDTO>> getPublishCostInfo(
+    int teacherId,
+    int courseId,
+  );
 
   Future<Result<bool>> delete(int teacherId, int id);
 }

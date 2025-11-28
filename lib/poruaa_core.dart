@@ -4,6 +4,7 @@ export 'domain/models/course_material/course_material.dart';
 export 'domain/models/series/series.dart';
 
 // DTOs
+export 'data/services/course/model/course_publish_cost_info_dto.dart';
 export 'data/services/teacher_profile/teacher_profile_dto.dart';
 
 // Services

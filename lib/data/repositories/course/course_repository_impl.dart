@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:poruaa_core/data/repositories/course/course_repository.dart';
 import 'package:poruaa_core/data/repositories/user/user_repository.dart';
 import 'package:poruaa_core/data/services/course/course_service.dart';
+import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
 import 'package:poruaa_core/data/dao/course/course_dao.dart';
 import 'package:poruaa_core/domain/models/course/course.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
@@ -416,6 +417,16 @@ class CourseRepositoryImpl extends CourseRepository {
       return Result.ok(course);
     }
     return result;
+  }
+
+  @override
+  Future<Result<CoursePublishCostInfoDTO>> getPublishCostInfo(
+    int courseId,
+  ) async {
+    return await _coursesService.getPublishCostInfo(
+      _userRepository.getCurrentUserId,
+      courseId,
+    );
   }
 
   // Pagination state management

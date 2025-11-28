@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:poruaa_core/data/services/authorized_api/authorized_api_service.dart';
 import 'package:poruaa_core/data/services/course/course_service.dart';
 import 'package:poruaa_core/data/services/course/model/course_model.dart';
+import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
 import 'package:poruaa_core/utils/result.dart';
 import 'package:http/http.dart' as http;
@@ -400,6 +401,33 @@ class CoursesServiceImpl extends CoursesService {
         return Result.ok(course);
       case Err():
         return Err("Network error");
+    }
+  }
+
+  @override
+  Future<Result<CoursePublishCostInfoDTO>> getPublishCostInfo(
+    int teacherId,
+    int courseId,
+  ) async {
+    final result = await _apiService.get(
+      "teachers/$teacherId/courses/$courseId/publish-cost-info",
+    );
+
+    switch (result) {
+      case Ok():
+        final body = result.value.body;
+        final code = result.value.statusCode;
+        if (code == 200) {
+          final jsonBody = jsonDecode(body) as Map<String, dynamic>;
+          final costInfo = CoursePublishCostInfoDTO.fromJson(jsonBody);
+          return Result.ok(costInfo);
+        } else if (code == 401) {
+          return Result.error("Access denied");
+        } else {
+          return Result.error(body);
+        }
+      case Err():
+        return Result.error("Failed to get publish cost info");
     }
   }
 }

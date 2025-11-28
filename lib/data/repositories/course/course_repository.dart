@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
 import 'package:poruaa_core/domain/models/course/course.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
 import 'package:poruaa_core/utils/result.dart';
@@ -41,6 +42,8 @@ abstract class CourseRepository {
   Future<Result> updateCourseExpirationDate(Course course, DateTime expiresAt);
   Future<Result> publishCourse(Course course);
   Future<Result> unpublishCourse(Course course);
+
+  Future<Result<CoursePublishCostInfoDTO>> getPublishCostInfo(int courseId);
 
   Future<Result<Course>> getCourse(int id, {bool refresh = false});
   Stream<Result<Course>> watchCourse(int courseId);
