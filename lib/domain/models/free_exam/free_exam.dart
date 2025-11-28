@@ -186,7 +186,7 @@ class FreeExam {
     );
   }
 
-  FreeExamItemsCompanion toCompanion(int teacherId) {
+  FreeExamItemsCompanion toCompanion({int? teacherId}) {
     return FreeExamItemsCompanion(
       id: Value(id),
       title: Value(title),
@@ -198,7 +198,7 @@ class FreeExam {
       startAt: Value(startAt),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      teacherId: Value(teacherId),
+      teacherId: Value(teacherId ?? this.teacherId),
       teacherName: Value(teacherName),
       teacherProfileUrl: Value(teacherProfileUrl),
       negativeMarking: Value(negativeMarking ?? 0.25),

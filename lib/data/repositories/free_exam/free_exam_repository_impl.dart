@@ -37,7 +37,7 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
       case Ok(:final value):
         var freeExams = value.map((e) => FreeExam.fromDTO(e)).toList();
         var freeExamCompanions = freeExams.map((e) {
-          return e.toCompanion(teacherId);
+          return e.toCompanion(teacherId: teacherId);
         });
         var exams = value
             .map((e) => e.exam)
@@ -65,7 +65,7 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
         var teacherId = _userRepository.getCurrentUserId;
 
         var freeExamCompanions = freeExams.map((e) {
-          return e.toCompanion(teacherId);
+          return e.toCompanion(teacherId: teacherId);
         });
         var exams = value
             .map((e) => e.exam)
@@ -89,8 +89,8 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
     switch (result) {
       case Ok(:final value):
         var freeExam = FreeExam.fromDTO(value);
-        var teacherId = _userRepository.teacherUser?.id.toInt();
-        _freeExamDao.insertExam(freeExam.toCompanion(teacherId ?? 0));
+        // var teacherId = _userRepository.teacherUser?.id.toInt();
+        _freeExamDao.insertExam(freeExam.toCompanion());
         return Result.ok(freeExam);
       default:
         return Result.error("Something went wrong");
@@ -125,8 +125,8 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
     switch (result) {
       case Ok(:final value):
         var freeExam = FreeExam.fromDTO(value);
-        var teacherId = _userRepository.teacherUser?.id.toInt();
-        _freeExamDao.insertExam(freeExam.toCompanion(teacherId ?? 0));
+        // var teacherId = _userRepository.teacherUser?.id.toInt();
+        _freeExamDao.insertExam(freeExam.toCompanion());
         return Result.ok(freeExam);
       case Err(:final error):
         return Result.error(error.toString());
@@ -146,8 +146,8 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
     switch (result) {
       case Ok(:final value):
         var freeExam = FreeExam.fromDTO(value);
-        var teacherId = _userRepository.teacherUser?.id.toInt();
-        _freeExamDao.insertExam(freeExam.toCompanion(teacherId ?? 0));
+        // var teacherId = _userRepository.teacherUser?.id.toInt();
+        _freeExamDao.insertExam(freeExam.toCompanion());
         return Result.ok(freeExam);
       case Err(:final error):
         return Result.error(error.toString());
@@ -179,7 +179,7 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
       case Ok(:final value):
         var freeExam = FreeExam.fromDTO(value);
         var teacherId = _userRepository.teacherUser?.id.toInt();
-        _freeExamDao.insertExam(freeExam.toCompanion(teacherId ?? 0));
+        _freeExamDao.insertExam(freeExam.toCompanion(teacherId: teacherId));
         return Result.ok(freeExam);
       case Err(:final error):
         return Result.error(error.toString());
@@ -198,10 +198,10 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
         var freeExams = paginatedResponse.items
             .map((e) => FreeExam.fromDTO(e))
             .toList();
-        var teacherId = 0;
+        // var teacherId = 0;
 
         var freeExamCompanions = freeExams.map((e) {
-          return e.toCompanion(teacherId);
+          return e.toCompanion();
         });
         var exams = paginatedResponse.items
             .map((e) => e.exam)
@@ -273,10 +273,10 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
     switch (result) {
       case Ok(:final value):
         var freeExams = value.map((e) => FreeExam.fromDTO(e)).toList();
-        var teacherId = 0;
+        // var teacherId = 0;
 
         var freeExamCompanions = freeExams.map((e) {
-          return e.toCompanion(teacherId);
+          return e.toCompanion();
         });
         var exams = value
             .map((e) => e.exam)
@@ -331,8 +331,7 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
     switch (result) {
       case Ok(:final value):
         var freeExam = FreeExam.fromDTO(value);
-        var teacherId = 0;
-        _freeExamDao.insertExam(freeExam.toCompanion(teacherId));
+        _freeExamDao.insertExam(freeExam.toCompanion());
         return Result.ok(freeExam);
       case Err(:final error):
         return Result.error(error.toString());
@@ -364,8 +363,8 @@ class FreeExamRepositoryImpl extends FreeExamRepository {
     switch (result) {
       case Ok(:final value):
         var freeExam = FreeExam.fromDTO(value);
-        var teacherId = 0;
-        _freeExamDao.insertExam(freeExam.toCompanion(teacherId));
+        // var teacherId = 0;
+        _freeExamDao.insertExam(freeExam.toCompanion());
         return Result.ok(freeExam);
       case Err(:final error):
         return Result.error(error.toString());
