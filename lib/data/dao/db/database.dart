@@ -47,6 +47,7 @@ class CourseItems extends Table {
   TextColumn get subTitle => text().nullable()();
   TextColumn get thumbnail => text().nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
+  DateTimeColumn get publishedAt => dateTime().nullable()();
   DateTimeColumn get expiresAt => dateTime().withDefault(
     Constant(DateTime.now().add(Duration(days: 356))),
   )();
@@ -344,10 +345,14 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(seriesItems);
           await m.createTable(courseSeriesItems);
         }
+        if (from < 8) {
+          // Add publishedAt column to CourseItems table
+          await m.addColumn(courseItems, courseItems.publishedAt);
+        }
       },
     );
   }
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 }

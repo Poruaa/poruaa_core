@@ -1577,6 +1577,17 @@ class $CourseItemsTable extends CourseItems
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _publishedAtMeta = const VerificationMeta(
+    'publishedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> publishedAt = GeneratedColumn<DateTime>(
+    'published_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _expiresAtMeta = const VerificationMeta(
     'expiresAt',
   );
@@ -1790,6 +1801,7 @@ class $CourseItemsTable extends CourseItems
     subTitle,
     thumbnail,
     createdAt,
+    publishedAt,
     expiresAt,
     price,
     regularPrice,
@@ -1847,6 +1859,15 @@ class $CourseItemsTable extends CourseItems
       context.handle(
         _createdAtMeta,
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('published_at')) {
+      context.handle(
+        _publishedAtMeta,
+        publishedAt.isAcceptableOrUnknown(
+          data['published_at']!,
+          _publishedAtMeta,
+        ),
       );
     }
     if (data.containsKey('expires_at')) {
@@ -1997,6 +2018,10 @@ class $CourseItemsTable extends CourseItems
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       ),
+      publishedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}published_at'],
+      ),
       expiresAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}expires_at'],
@@ -2080,6 +2105,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
   final String? subTitle;
   final String? thumbnail;
   final DateTime? createdAt;
+  final DateTime? publishedAt;
   final DateTime expiresAt;
   final double price;
   final double? regularPrice;
@@ -2103,6 +2129,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
     this.subTitle,
     this.thumbnail,
     this.createdAt,
+    this.publishedAt,
     required this.expiresAt,
     required this.price,
     this.regularPrice,
@@ -2134,6 +2161,9 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
     }
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || publishedAt != null) {
+      map['published_at'] = Variable<DateTime>(publishedAt);
     }
     map['expires_at'] = Variable<DateTime>(expiresAt);
     map['price'] = Variable<double>(price);
@@ -2172,6 +2202,9 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
+      publishedAt: publishedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(publishedAt),
       expiresAt: Value(expiresAt),
       price: Value(price),
       regularPrice: regularPrice == null && nullToAbsent
@@ -2207,6 +2240,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
       subTitle: serializer.fromJson<String?>(json['subTitle']),
       thumbnail: serializer.fromJson<String?>(json['thumbnail']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      publishedAt: serializer.fromJson<DateTime?>(json['publishedAt']),
       expiresAt: serializer.fromJson<DateTime>(json['expiresAt']),
       price: serializer.fromJson<double>(json['price']),
       regularPrice: serializer.fromJson<double?>(json['regularPrice']),
@@ -2235,6 +2269,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
       'subTitle': serializer.toJson<String?>(subTitle),
       'thumbnail': serializer.toJson<String?>(thumbnail),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'publishedAt': serializer.toJson<DateTime?>(publishedAt),
       'expiresAt': serializer.toJson<DateTime>(expiresAt),
       'price': serializer.toJson<double>(price),
       'regularPrice': serializer.toJson<double?>(regularPrice),
@@ -2261,6 +2296,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
     Value<String?> subTitle = const Value.absent(),
     Value<String?> thumbnail = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> publishedAt = const Value.absent(),
     DateTime? expiresAt,
     double? price,
     Value<double?> regularPrice = const Value.absent(),
@@ -2284,6 +2320,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
     subTitle: subTitle.present ? subTitle.value : this.subTitle,
     thumbnail: thumbnail.present ? thumbnail.value : this.thumbnail,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    publishedAt: publishedAt.present ? publishedAt.value : this.publishedAt,
     expiresAt: expiresAt ?? this.expiresAt,
     price: price ?? this.price,
     regularPrice: regularPrice.present ? regularPrice.value : this.regularPrice,
@@ -2309,6 +2346,9 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
       subTitle: data.subTitle.present ? data.subTitle.value : this.subTitle,
       thumbnail: data.thumbnail.present ? data.thumbnail.value : this.thumbnail,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      publishedAt: data.publishedAt.present
+          ? data.publishedAt.value
+          : this.publishedAt,
       expiresAt: data.expiresAt.present ? data.expiresAt.value : this.expiresAt,
       price: data.price.present ? data.price.value : this.price,
       regularPrice: data.regularPrice.present
@@ -2361,6 +2401,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
           ..write('subTitle: $subTitle, ')
           ..write('thumbnail: $thumbnail, ')
           ..write('createdAt: $createdAt, ')
+          ..write('publishedAt: $publishedAt, ')
           ..write('expiresAt: $expiresAt, ')
           ..write('price: $price, ')
           ..write('regularPrice: $regularPrice, ')
@@ -2389,6 +2430,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
     subTitle,
     thumbnail,
     createdAt,
+    publishedAt,
     expiresAt,
     price,
     regularPrice,
@@ -2416,6 +2458,7 @@ class CourseItem extends DataClass implements Insertable<CourseItem> {
           other.subTitle == this.subTitle &&
           other.thumbnail == this.thumbnail &&
           other.createdAt == this.createdAt &&
+          other.publishedAt == this.publishedAt &&
           other.expiresAt == this.expiresAt &&
           other.price == this.price &&
           other.regularPrice == this.regularPrice &&
@@ -2441,6 +2484,7 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
   final Value<String?> subTitle;
   final Value<String?> thumbnail;
   final Value<DateTime?> createdAt;
+  final Value<DateTime?> publishedAt;
   final Value<DateTime> expiresAt;
   final Value<double> price;
   final Value<double?> regularPrice;
@@ -2464,6 +2508,7 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
     this.subTitle = const Value.absent(),
     this.thumbnail = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.publishedAt = const Value.absent(),
     this.expiresAt = const Value.absent(),
     this.price = const Value.absent(),
     this.regularPrice = const Value.absent(),
@@ -2488,6 +2533,7 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
     this.subTitle = const Value.absent(),
     this.thumbnail = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.publishedAt = const Value.absent(),
     this.expiresAt = const Value.absent(),
     this.price = const Value.absent(),
     this.regularPrice = const Value.absent(),
@@ -2513,6 +2559,7 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
     Expression<String>? subTitle,
     Expression<String>? thumbnail,
     Expression<DateTime>? createdAt,
+    Expression<DateTime>? publishedAt,
     Expression<DateTime>? expiresAt,
     Expression<double>? price,
     Expression<double>? regularPrice,
@@ -2537,6 +2584,7 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
       if (subTitle != null) 'sub_title': subTitle,
       if (thumbnail != null) 'thumbnail': thumbnail,
       if (createdAt != null) 'created_at': createdAt,
+      if (publishedAt != null) 'published_at': publishedAt,
       if (expiresAt != null) 'expires_at': expiresAt,
       if (price != null) 'price': price,
       if (regularPrice != null) 'regular_price': regularPrice,
@@ -2563,6 +2611,7 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
     Value<String?>? subTitle,
     Value<String?>? thumbnail,
     Value<DateTime?>? createdAt,
+    Value<DateTime?>? publishedAt,
     Value<DateTime>? expiresAt,
     Value<double>? price,
     Value<double?>? regularPrice,
@@ -2587,6 +2636,7 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
       subTitle: subTitle ?? this.subTitle,
       thumbnail: thumbnail ?? this.thumbnail,
       createdAt: createdAt ?? this.createdAt,
+      publishedAt: publishedAt ?? this.publishedAt,
       expiresAt: expiresAt ?? this.expiresAt,
       price: price ?? this.price,
       regularPrice: regularPrice ?? this.regularPrice,
@@ -2624,6 +2674,9 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (publishedAt.present) {
+      map['published_at'] = Variable<DateTime>(publishedAt.value);
     }
     if (expiresAt.present) {
       map['expires_at'] = Variable<DateTime>(expiresAt.value);
@@ -2687,6 +2740,7 @@ class CourseItemsCompanion extends UpdateCompanion<CourseItem> {
           ..write('subTitle: $subTitle, ')
           ..write('thumbnail: $thumbnail, ')
           ..write('createdAt: $createdAt, ')
+          ..write('publishedAt: $publishedAt, ')
           ..write('expiresAt: $expiresAt, ')
           ..write('price: $price, ')
           ..write('regularPrice: $regularPrice, ')
@@ -12402,6 +12456,7 @@ typedef $$CourseItemsTableCreateCompanionBuilder =
       Value<String?> subTitle,
       Value<String?> thumbnail,
       Value<DateTime?> createdAt,
+      Value<DateTime?> publishedAt,
       Value<DateTime> expiresAt,
       Value<double> price,
       Value<double?> regularPrice,
@@ -12427,6 +12482,7 @@ typedef $$CourseItemsTableUpdateCompanionBuilder =
       Value<String?> subTitle,
       Value<String?> thumbnail,
       Value<DateTime?> createdAt,
+      Value<DateTime?> publishedAt,
       Value<DateTime> expiresAt,
       Value<double> price,
       Value<double?> regularPrice,
@@ -12602,6 +12658,11 @@ class $$CourseItemsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get publishedAt => $composableBuilder(
+    column: $table.publishedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12843,6 +12904,11 @@ class $$CourseItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get publishedAt => $composableBuilder(
+    column: $table.publishedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get expiresAt => $composableBuilder(
     column: $table.expiresAt,
     builder: (column) => ColumnOrderings(column),
@@ -12970,6 +13036,11 @@ class $$CourseItemsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get publishedAt => $composableBuilder(
+    column: $table.publishedAt,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get expiresAt =>
       $composableBuilder(column: $table.expiresAt, builder: (column) => column);
@@ -13209,6 +13280,7 @@ class $$CourseItemsTableTableManager
                 Value<String?> subTitle = const Value.absent(),
                 Value<String?> thumbnail = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> publishedAt = const Value.absent(),
                 Value<DateTime> expiresAt = const Value.absent(),
                 Value<double> price = const Value.absent(),
                 Value<double?> regularPrice = const Value.absent(),
@@ -13232,6 +13304,7 @@ class $$CourseItemsTableTableManager
                 subTitle: subTitle,
                 thumbnail: thumbnail,
                 createdAt: createdAt,
+                publishedAt: publishedAt,
                 expiresAt: expiresAt,
                 price: price,
                 regularPrice: regularPrice,
@@ -13257,6 +13330,7 @@ class $$CourseItemsTableTableManager
                 Value<String?> subTitle = const Value.absent(),
                 Value<String?> thumbnail = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> publishedAt = const Value.absent(),
                 Value<DateTime> expiresAt = const Value.absent(),
                 Value<double> price = const Value.absent(),
                 Value<double?> regularPrice = const Value.absent(),
@@ -13280,6 +13354,7 @@ class $$CourseItemsTableTableManager
                 subTitle: subTitle,
                 thumbnail: thumbnail,
                 createdAt: createdAt,
+                publishedAt: publishedAt,
                 expiresAt: expiresAt,
                 price: price,
                 regularPrice: regularPrice,

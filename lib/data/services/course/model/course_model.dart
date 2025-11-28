@@ -17,6 +17,7 @@ class CourseModel {
   final bool? isEnrolled;
   final bool isUnlisted;
   final DateTime? createdAt;
+  final DateTime? publishedAt;
   final DateTime expiresAt;
   final int? examCount;
   final int? materialCount;
@@ -40,6 +41,7 @@ class CourseModel {
     this.star5Count,
     this.isUnlisted, {
     this.createdAt,
+    this.publishedAt,
     required this.examCount,
     this.materialCount,
     required this.expiresAt,
@@ -64,6 +66,9 @@ class CourseModel {
       json["star_4_count"] ?? 0,
       json["star_5_count"] ?? 0,
       json["is_unlisted"] ?? false,
+      publishedAt: json["published_at"] != null
+          ? DateTime.parse(json["published_at"]).toLocal()
+          : null,
       examCount: json["exam_count"] ?? 0,
       materialCount: json["material_count"] ?? 0,
       expiresAt: DateTime.parse(json["expires_at"]).toLocal(),

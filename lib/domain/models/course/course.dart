@@ -21,6 +21,7 @@ class Course {
   final int star5Count;
   final bool? isEnrolled;
   final bool isUnlisted;
+  final DateTime? publishedAt;
   final DateTime expiresAt;
   final int? examCount;
   final int? materialCount;
@@ -43,6 +44,7 @@ class Course {
     this.teacherName,
     required this.isUnlisted,
     this.isEnrolled,
+    this.publishedAt,
     required this.expiresAt,
     required this.examCount,
     this.materialCount,
@@ -67,6 +69,7 @@ class Course {
       teacherName: courseModel.teacherName,
       isEnrolled: courseModel.isEnrolled,
       isUnlisted: courseModel.isUnlisted,
+      publishedAt: courseModel.publishedAt,
       expiresAt: courseModel.expiresAt,
       examCount: courseModel.examCount ?? 0, // Default to 0 if not provided
       materialCount:
@@ -93,6 +96,7 @@ class Course {
       teacherName: null,
       isUnlisted: false,
       isEnrolled: false,
+      publishedAt: null,
       examCount: 0,
       materialCount: 0,
       expiresAt: DateTime.now().add(const Duration(days: 365)), // Default to
@@ -117,6 +121,7 @@ class Course {
     String? teacherName,
     bool? isEnrolled,
     bool? isUnlisted,
+    DateTime? publishedAt,
     DateTime? expiresAt,
     int? examCount,
     int? materialCount,
@@ -138,6 +143,7 @@ class Course {
       teacherId: teacherId ?? this.teacherId,
       teacherName: teacherName ?? this.teacherName,
       isEnrolled: isEnrolled ?? this.isEnrolled,
+      publishedAt: publishedAt ?? this.publishedAt,
       examCount: examCount ?? this.examCount, // Exam count is not copied
       materialCount:
           materialCount ?? this.materialCount, // Material count is not copied
@@ -148,7 +154,8 @@ class Course {
   }
 
   factory Course.fromCourseEnrollmentModel(
-      FlatCourseEnrollmentModel courseModel) {
+    FlatCourseEnrollmentModel courseModel,
+  ) {
     // Enrollment? enrollment = switch (courseModel) {
     //   FlatCourseEnrollmentModel(
     //     id: var courseId,
@@ -176,6 +183,7 @@ class Course {
       teacherId: courseModel.teacherId,
       teacherName: null, // Default empty string for enrollment model
       isUnlisted: false,
+      publishedAt: null,
       examCount: 0,
       materialCount: 0,
       expiresAt: DateTime.now().add(const Duration(days: 365)),
@@ -203,6 +211,7 @@ class Course {
       teacherName: item.teacherName, // Use the teacher name from the database
       isEnrolled: item.isEnrolled,
       isUnlisted: item.isUnlisted,
+      publishedAt: item.publishedAt,
       expiresAt: item.expiresAt,
       examCount: item.examCount, // Default to 0 if not provided
       materialCount: item.materialCount, // Default to 0 if not provided
@@ -229,6 +238,7 @@ class Course {
       star4Count: Value(star4Count),
       star5Count: Value(star5Count),
       isUnlisted: Value(isUnlisted),
+      publishedAt: Value(publishedAt),
       expiresAt: Value(expiresAt),
       createdAt: Value(DateTime.now()), // Assuming createdAt is now
       examCount: Value(examCount ?? 0), // Default to 0 if not provided
@@ -255,6 +265,7 @@ class Course {
       star4Count,
       star5Count,
       isUnlisted,
+      publishedAt: publishedAt,
       expiresAt: expiresAt,
       examCount: examCount ?? 0, // Default to 0 if not provided
       materialCount: materialCount ?? 0, // Default to 0 if not provided
