@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:poruaa_core/data/services/course/model/course_extension_invoice_dto.dart';
+import 'package:poruaa_core/data/services/course/model/course_payment_redirect_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
 import 'package:poruaa_core/domain/models/course/course.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
@@ -50,6 +51,8 @@ abstract class CourseRepository {
     int courseId,
     CourseExpirationInput input,
   );
+
+  Future<Result<CoursePaymentRedirectDTO>> generatePaymentToken(int courseId);
 
   Future<Result<Course>> getCourse(int id, {bool refresh = false});
   Stream<Result<Course>> watchCourse(int courseId);

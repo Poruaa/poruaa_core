@@ -5,6 +5,7 @@ import 'package:poruaa_core/data/services/authorized_api/authorized_api_service.
 import 'package:poruaa_core/data/services/course/course_service.dart';
 import 'package:poruaa_core/data/services/course/model/course_extension_invoice_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_model.dart';
+import 'package:poruaa_core/data/services/course/model/course_payment_redirect_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
 import 'package:poruaa_core/utils/result.dart';
@@ -461,6 +462,36 @@ class CoursesServiceImpl extends CoursesService {
         }
       case Err():
         return Result.error("Failed to get extension invoice");
+    }
+  }
+
+  @override
+  Future<Result<CoursePaymentRedirectDTO>> generatePaymentToken(
+    int courseId,
+  ) async {
+    final result = await _apiService.post(
+      "students/me/poruaa-payment/courses/generate",
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"course_id": courseId}),
+    );
+
+    switch (result) {
+      case Ok():
+        final body = result.value.body;
+        final code = result.value.statusCode;
+        if (code == 200) {
+          final jsonBody = jsonDecode(body) as Map<String, dynamic>;
+          final redirectDto = CoursePaymentRedirectDTO.fromJson(jsonBody);
+          return Result.ok(redirectDto);
+        } else if (code == 401) {
+          return Result.error("Unauthorized");
+        } else if (code == 400) {
+          return Result.error(body);
+        } else {
+          return Result.error(body);
+        }
+      case Err():
+        return Result.error("Failed to generate payment token");
     }
   }
 }
