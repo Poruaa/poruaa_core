@@ -5,6 +5,7 @@ import 'package:poruaa_core/data/services/course_note/dto/reorder_course_notes_i
 import 'package:poruaa_core/data/services/course_note/dto/update_course_note_status_input.dart';
 import 'package:poruaa_core/domain/models/course_note/course_note.dart';
 import 'package:poruaa_core/domain/models/course_note/note_with_course_info.dart';
+import 'package:poruaa_core/domain/models/note/note_with_structure.dart';
 import 'package:poruaa_core/utils/result.dart';
 
 class CourseNoteRepositoryImpl extends CourseNoteRepository {
@@ -96,5 +97,41 @@ class CourseNoteRepositoryImpl extends CourseNoteRepository {
       courseId,
       input,
     );
+  }
+
+  // Student endpoints
+
+  @override
+  Future<Result<List<NoteWithCourseInfo>>> getStudentCourseNotes(
+    int courseId,
+  ) async {
+    var result = await _courseNoteService.getStudentCourseNotes(courseId);
+    switch (result) {
+      case Ok():
+        var notes = result.value
+            .map((dto) => NoteWithCourseInfo.fromDto(dto))
+            .toList();
+        return Result.ok(notes);
+      case Err():
+        return Result.error(result.error);
+    }
+  }
+
+  @override
+  Future<Result<NoteWithStructure>> getStudentCourseNoteWithStructure(
+    int courseId,
+    int noteId,
+  ) async {
+    var result = await _courseNoteService.getStudentCourseNoteWithStructure(
+      courseId,
+      noteId,
+    );
+    switch (result) {
+      case Ok():
+        var noteWithStructure = NoteWithStructure.fromDto(result.value);
+        return Result.ok(noteWithStructure);
+      case Err():
+        return Result.error(result.error);
+    }
   }
 }

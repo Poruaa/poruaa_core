@@ -3,6 +3,7 @@ import 'package:poruaa_core/data/services/course_note/dto/course_note_dto.dart';
 import 'package:poruaa_core/data/services/course_note/dto/note_with_course_info_dto.dart';
 import 'package:poruaa_core/data/services/course_note/dto/reorder_course_notes_input.dart';
 import 'package:poruaa_core/data/services/course_note/dto/update_course_note_status_input.dart';
+import 'package:poruaa_core/data/services/note/dto/note_with_structure_dto.dart';
 import 'package:poruaa_core/utils/result.dart';
 
 abstract class CourseNoteService {
@@ -39,5 +40,18 @@ abstract class CourseNoteService {
     int teacherId,
     int courseId,
     ReorderCourseNotesInput input,
+  );
+
+  // Student endpoints
+
+  /// Get all notes attached to a course (only notes the student has permission to view)
+  Future<Result<List<NoteWithCourseInfoDto>>> getStudentCourseNotes(
+    int courseId,
+  );
+
+  /// Get a specific note with complete structure including all chapters, topics, and contents
+  Future<Result<NoteWithStructureDto>> getStudentCourseNoteWithStructure(
+    int courseId,
+    int noteId,
   );
 }

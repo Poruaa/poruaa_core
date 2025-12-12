@@ -7,6 +7,7 @@ import 'package:poruaa_core/data/services/course_note/dto/course_note_dto.dart';
 import 'package:poruaa_core/data/services/course_note/dto/note_with_course_info_dto.dart';
 import 'package:poruaa_core/data/services/course_note/dto/reorder_course_notes_input.dart';
 import 'package:poruaa_core/data/services/course_note/dto/update_course_note_status_input.dart';
+import 'package:poruaa_core/data/services/note/dto/note_with_structure_dto.dart';
 import 'package:poruaa_core/utils/result.dart';
 
 class CourseNoteServiceImpl extends CourseNoteService {
@@ -151,6 +152,61 @@ class CourseNoteServiceImpl extends CourseNoteService {
             return Result.error(response.body);
           }
           return Result.ok(true);
+        case Err():
+          return Result.error("Connection error");
+      }
+    } catch (e) {
+      return Result.error("Error: $e");
+    }
+  }
+
+  // Student endpoints
+
+  @override
+  Future<Result<List<NoteWithCourseInfoDto>>> getStudentCourseNotes(
+    int courseId,
+  ) async {
+    try {
+      var result = await _apiService.get("students/me/courses/$courseId/notes");
+      switch (result) {
+        case Ok():
+          var response = result.value;
+          var body = response.body;
+          var jsonBody = jsonDecode(body);
+          if (jsonBody is List) {
+            var notes = jsonBody
+                .map((e) => NoteWithCourseInfoDto.fromJson(e))
+                .toList();
+            return Result.ok(notes);
+          } else {
+            return Result.error("Parse error");
+          }
+        case Err():
+          return Result.error("Connection error");
+      }
+    } catch (e) {
+      return Result.error("Error: $e");
+    }
+  }
+
+  @override
+  Future<Result<NoteWithStructureDto>> getStudentCourseNoteWithStructure(
+    int courseId,
+    int noteId,
+  ) async {
+    try {
+      var result = await _apiService.get(
+        "students/me/courses/$courseId/notes/$noteId",
+      );
+      switch (result) {
+        case Ok():
+          var response = result.value;
+          if (response.statusCode != 200) {
+            return Result.error(response.body);
+          }
+          var jsonBody = jsonDecode(response.body);
+          var noteWithStructure = NoteWithStructureDto.fromJson(jsonBody);
+          return Result.ok(noteWithStructure);
         case Err():
           return Result.error("Connection error");
       }
