@@ -40,4 +40,10 @@ abstract class StorageRepository {
     required String filePath,
     int? expiresInSeconds,
   });
+
+  /// Recompute file size from R2 and update database
+  Future<Result<RecomputeFileSizeResponse>> recomputeFileSize(
+    int teacherId,
+    String filePath,
+  );
 }

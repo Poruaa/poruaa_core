@@ -130,8 +130,8 @@ Map<String, dynamic> _$TeacherProfileToJson(TeacherProfile instance) =>
 
 TeachingPhilosophy _$TeachingPhilosophyFromJson(Map<String, dynamic> json) =>
     TeachingPhilosophy(
-      quote: json['quote'] as String,
-      description: json['description'] as String,
+      quote: json['quote'] as String?,
+      description: json['description'] as String?,
       principles: (json['principles'] as List<dynamic>)
           .map((e) => TeachingPrinciple.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -162,7 +162,7 @@ Specialization _$SpecializationFromJson(Map<String, dynamic> json) =>
     Specialization(
       id: (json['id'] as num).toInt(),
       title: json['title'] as String,
-      icon: json['icon'] as String,
+      icon: json['icon'] as String?,
       skills: (json['skills'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),

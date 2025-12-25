@@ -1,9 +1,12 @@
 class TeacherBookmark {
   final int id;
   final int? teacherId;
+  final String? title;
   final String? thumbnail;
   final String? description;
   final String? externalUrl;
+  final String? resourceType;
+  final String? category;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? teacherName;
@@ -13,9 +16,12 @@ class TeacherBookmark {
   TeacherBookmark({
     required this.id,
     this.teacherId,
+    this.title,
     this.thumbnail,
     this.description,
     this.externalUrl,
+    this.resourceType,
+    this.category,
     this.createdAt,
     this.updatedAt,
     this.teacherName,
@@ -27,9 +33,12 @@ class TeacherBookmark {
     return TeacherBookmark(
       id: json['id'] as int,
       teacherId: json['teacher_id'] as int?,
+      title: json['title'] as String?,
       thumbnail: json['thumbnail'] as String?,
       description: json['description'] as String?,
       externalUrl: json['external_url'] as String?,
+      resourceType: json['resource_type'] as String?,
+      category: json['category'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : null,
@@ -46,9 +55,12 @@ class TeacherBookmark {
     return {
       'id': id,
       'teacher_id': teacherId,
+      'title': title,
       'thumbnail': thumbnail,
       'description': description,
       'external_url': externalUrl,
+      'resource_type': resourceType,
+      'category': category,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'teacher_name': teacherName,

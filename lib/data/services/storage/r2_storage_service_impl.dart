@@ -223,4 +223,39 @@ class R2StorageServiceImpl implements R2StorageService {
       return Err('Network error: $e');
     }
   }
+
+  @override
+  Future<Result<RecomputeFileSizeResponse>> recomputeFileSize(
+    int teacherId,
+    RecomputeFileSizeRequest request,
+  ) async {
+    try {
+      final response = await _apiService.post(
+        'teachers/$teacherId/storage/recompute-size',
+        body: json.encode(request.toJson()),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      switch (response) {
+        case Ok():
+          if (response.value.statusCode != 200) {
+            return Err(
+              'Failed to recompute file size: ${response.value.statusCode}',
+            );
+          }
+          final jsonData = json.decode(response.value.body);
+          final recomputeResponse = RecomputeFileSizeResponse.fromJson(
+            jsonData,
+          );
+          return Ok(recomputeResponse);
+        case Err():
+          return Err('Failed to recompute file size: ${response.error}');
+      }
+    } catch (e) {
+      return Err('Network error: $e');
+    }
+  }
 }

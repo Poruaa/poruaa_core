@@ -1,4 +1,7 @@
 import 'package:poruaa_core/domain/models/series/series.dart';
+import 'package:poruaa_core/domain/models/teacher/comprehensive_teacher_profile.dart';
+import 'package:poruaa_core/domain/models/teacher_bookmark/teacher_bookmark.dart';
+import 'package:poruaa_core/domain/models/teacher_highlight/teacher_highlight.dart';
 
 class TeacherDetailsDTO {
   final int id;
@@ -89,7 +92,7 @@ class TeacherDetailsDTO {
           : null,
       isVerified: json['is_verified'] as bool?,
       rating: json['rating'] != null
-          ? double.tryParse(json['rating'] as String)?.toDouble()
+          ? double.tryParse(json['rating'].toString())
           : null,
       totalStudents: json['total_students'] as int?,
       totalCourses: json['total_courses'] as int?,
@@ -97,7 +100,7 @@ class TeacherDetailsDTO {
       profileImage: json['profile_image'] as String?,
       bannerImage: json['banner_image'] as String?,
       consultationFee: json['consultation_fee'] != null
-          ? (json['consultation_fee'] as num).toDouble()
+          ? double.tryParse(json['consultation_fee'].toString())
           : null,
       currency: json['currency'] as String?,
       timezone: json['timezone'] as String?,
@@ -144,20 +147,72 @@ class TeacherDetailsDTO {
   }
 }
 
-class TeacherProfileWithSeriesDTO {
+class EnhancedTeacherProfileWithSeriesDTO {
   final TeacherDetailsDTO teacher;
   final List<SeriesWithCoursesDTO> series;
+  final List<TeacherHighlight> highlights;
+  final List<TeacherBookmark> bookmarks;
+  final TeachingPhilosophy? teachingPhilosophy;
+  final List<Specialization> specializations;
+  final List<CourseTaught> coursesTaught;
+  final List<Testimonial> testimonials;
+  final TeacherStats? stats;
+  final SocialLinks socialLinks;
+  final Availability availability;
 
-  TeacherProfileWithSeriesDTO({required this.teacher, required this.series});
+  EnhancedTeacherProfileWithSeriesDTO({
+    required this.teacher,
+    required this.series,
+    required this.highlights,
+    required this.bookmarks,
+    this.teachingPhilosophy,
+    required this.specializations,
+    required this.coursesTaught,
+    required this.testimonials,
+    this.stats,
+    required this.socialLinks,
+    required this.availability,
+  });
 
-  factory TeacherProfileWithSeriesDTO.fromJson(Map<String, dynamic> json) {
-    return TeacherProfileWithSeriesDTO(
+  factory EnhancedTeacherProfileWithSeriesDTO.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return EnhancedTeacherProfileWithSeriesDTO(
       teacher: TeacherDetailsDTO.fromJson(
         json['teacher'] as Map<String, dynamic>,
       ),
       series: (json['series'] as List<dynamic>)
           .map((s) => SeriesWithCoursesDTO.fromJson(s as Map<String, dynamic>))
           .toList(),
+      highlights: (json['highlights'] as List<dynamic>)
+          .map((h) => TeacherHighlight.fromJson(h as Map<String, dynamic>))
+          .toList(),
+      bookmarks: (json['bookmarks'] as List<dynamic>)
+          .map((b) => TeacherBookmark.fromJson(b as Map<String, dynamic>))
+          .toList(),
+      teachingPhilosophy: json['teaching_philosophy'] != null
+          ? TeachingPhilosophy.fromJson(
+              json['teaching_philosophy'] as Map<String, dynamic>,
+            )
+          : null,
+      specializations: (json['specializations'] as List<dynamic>)
+          .map((s) => Specialization.fromJson(s as Map<String, dynamic>))
+          .toList(),
+      coursesTaught: (json['courses_taught'] as List<dynamic>)
+          .map((c) => CourseTaught.fromJson(c as Map<String, dynamic>))
+          .toList(),
+      testimonials: (json['testimonials'] as List<dynamic>)
+          .map((t) => Testimonial.fromJson(t as Map<String, dynamic>))
+          .toList(),
+      stats: json['stats'] != null
+          ? TeacherStats.fromJson(json['stats'] as Map<String, dynamic>)
+          : null,
+      socialLinks: SocialLinks.fromJson(
+        json['social_links'] as Map<String, dynamic>,
+      ),
+      availability: Availability.fromJson(
+        json['availability'] as Map<String, dynamic>,
+      ),
     );
   }
 
@@ -165,6 +220,15 @@ class TeacherProfileWithSeriesDTO {
     return {
       'teacher': teacher.toJson(),
       'series': series.map((s) => s.toJson()).toList(),
+      'highlights': highlights.map((h) => h.toJson()).toList(),
+      'bookmarks': bookmarks.map((b) => b.toJson()).toList(),
+      'teaching_philosophy': teachingPhilosophy?.toJson(),
+      'specializations': specializations.map((s) => s.toJson()).toList(),
+      'courses_taught': coursesTaught.map((c) => c.toJson()).toList(),
+      'testimonials': testimonials.map((t) => t.toJson()).toList(),
+      'stats': stats?.toJson(),
+      'social_links': socialLinks.toJson(),
+      'availability': availability.toJson(),
     };
   }
 }

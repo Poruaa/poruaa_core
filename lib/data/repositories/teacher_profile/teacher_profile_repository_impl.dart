@@ -9,7 +9,7 @@ class TeacherProfileRepositoryImpl implements TeacherProfileRepository {
   TeacherProfileRepositoryImpl(this._teacherProfileService);
 
   @override
-  Future<Result<TeacherProfileWithSeriesDTO>> getTeacherProfile(
+  Future<Result<EnhancedTeacherProfileWithSeriesDTO>> getTeacherProfile(
     int teacherId,
   ) async {
     return await _teacherProfileService.getTeacherProfile(teacherId);

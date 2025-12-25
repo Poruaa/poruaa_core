@@ -5,6 +5,8 @@ class TeacherHighlight {
   final String? description;
   final String? externalUrl;
   final String? thumbnail;
+  final String? achievementType;
+  final bool? verified;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? teacherName;
@@ -18,10 +20,12 @@ class TeacherHighlight {
     this.description,
     this.externalUrl,
     this.thumbnail,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.teacherName,
-    required this.teacherEmail,
+    this.achievementType,
+    this.verified,
+    this.createdAt,
+    this.updatedAt,
+    this.teacherName,
+    this.teacherEmail,
     this.teacherProfileUrl,
   });
 
@@ -33,6 +37,8 @@ class TeacherHighlight {
       description: json['description'] as String?,
       externalUrl: json['external_url'] as String?,
       thumbnail: json['thumbnail'] as String?,
+      achievementType: json['achievement_type'] as String?,
+      verified: json['verified'] as bool?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : null,
@@ -53,6 +59,8 @@ class TeacherHighlight {
       'description': description,
       'external_url': externalUrl,
       'thumbnail': thumbnail,
+      'achievement_type': achievementType,
+      'verified': verified,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'teacher_name': teacherName,

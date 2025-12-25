@@ -1335,6 +1335,256 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
   }
 }
 
+class $NotificationTopicsTable extends NotificationTopics
+    with TableInfo<$NotificationTopicsTable, NotificationTopic> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NotificationTopicsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  static const VerificationMeta _topicMeta = const VerificationMeta('topic');
+  @override
+  late final GeneratedColumn<String> topic = GeneratedColumn<String>(
+    'topic',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, userId, topic];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'notification_topics';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<NotificationTopic> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('topic')) {
+      context.handle(
+        _topicMeta,
+        topic.isAcceptableOrUnknown(data['topic']!, _topicMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_topicMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  NotificationTopic map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotificationTopic(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}user_id'],
+      )!,
+      topic: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}topic'],
+      )!,
+    );
+  }
+
+  @override
+  $NotificationTopicsTable createAlias(String alias) {
+    return $NotificationTopicsTable(attachedDatabase, alias);
+  }
+}
+
+class NotificationTopic extends DataClass
+    implements Insertable<NotificationTopic> {
+  final int id;
+  final int userId;
+  final String topic;
+  const NotificationTopic({
+    required this.id,
+    required this.userId,
+    required this.topic,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
+    map['topic'] = Variable<String>(topic);
+    return map;
+  }
+
+  NotificationTopicsCompanion toCompanion(bool nullToAbsent) {
+    return NotificationTopicsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      topic: Value(topic),
+    );
+  }
+
+  factory NotificationTopic.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NotificationTopic(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
+      topic: serializer.fromJson<String>(json['topic']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
+      'topic': serializer.toJson<String>(topic),
+    };
+  }
+
+  NotificationTopic copyWith({int? id, int? userId, String? topic}) =>
+      NotificationTopic(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        topic: topic ?? this.topic,
+      );
+  NotificationTopic copyWithCompanion(NotificationTopicsCompanion data) {
+    return NotificationTopic(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      topic: data.topic.present ? data.topic.value : this.topic,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationTopic(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('topic: $topic')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userId, topic);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NotificationTopic &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.topic == this.topic);
+}
+
+class NotificationTopicsCompanion extends UpdateCompanion<NotificationTopic> {
+  final Value<int> id;
+  final Value<int> userId;
+  final Value<String> topic;
+  const NotificationTopicsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.topic = const Value.absent(),
+  });
+  NotificationTopicsCompanion.insert({
+    this.id = const Value.absent(),
+    required int userId,
+    required String topic,
+  }) : userId = Value(userId),
+       topic = Value(topic);
+  static Insertable<NotificationTopic> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<String>? topic,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (topic != null) 'topic': topic,
+    });
+  }
+
+  NotificationTopicsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? userId,
+    Value<String>? topic,
+  }) {
+    return NotificationTopicsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      topic: topic ?? this.topic,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (topic.present) {
+      map['topic'] = Variable<String>(topic.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationTopicsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('topic: $topic')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$CacheDatabase extends GeneratedDatabase {
   _$CacheDatabase(QueryExecutor e) : super(e);
   $CacheDatabaseManager get managers => $CacheDatabaseManager(this);
@@ -1342,6 +1592,8 @@ abstract class _$CacheDatabase extends GeneratedDatabase {
       $CourseExamResultItemsTable(this);
   late final $CachedQuestionItemsTable cachedQuestionItems =
       $CachedQuestionItemsTable(this);
+  late final $NotificationTopicsTable notificationTopics =
+      $NotificationTopicsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1349,6 +1601,7 @@ abstract class _$CacheDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     courseExamResultItems,
     cachedQuestionItems,
+    notificationTopics,
   ];
 }
 
@@ -2015,6 +2268,175 @@ typedef $$CachedQuestionItemsTableProcessedTableManager =
       CachedQuestionItem,
       PrefetchHooks Function()
     >;
+typedef $$NotificationTopicsTableCreateCompanionBuilder =
+    NotificationTopicsCompanion Function({
+      Value<int> id,
+      required int userId,
+      required String topic,
+    });
+typedef $$NotificationTopicsTableUpdateCompanionBuilder =
+    NotificationTopicsCompanion Function({
+      Value<int> id,
+      Value<int> userId,
+      Value<String> topic,
+    });
+
+class $$NotificationTopicsTableFilterComposer
+    extends Composer<_$CacheDatabase, $NotificationTopicsTable> {
+  $$NotificationTopicsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get topic => $composableBuilder(
+    column: $table.topic,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$NotificationTopicsTableOrderingComposer
+    extends Composer<_$CacheDatabase, $NotificationTopicsTable> {
+  $$NotificationTopicsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get topic => $composableBuilder(
+    column: $table.topic,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$NotificationTopicsTableAnnotationComposer
+    extends Composer<_$CacheDatabase, $NotificationTopicsTable> {
+  $$NotificationTopicsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get topic =>
+      $composableBuilder(column: $table.topic, builder: (column) => column);
+}
+
+class $$NotificationTopicsTableTableManager
+    extends
+        RootTableManager<
+          _$CacheDatabase,
+          $NotificationTopicsTable,
+          NotificationTopic,
+          $$NotificationTopicsTableFilterComposer,
+          $$NotificationTopicsTableOrderingComposer,
+          $$NotificationTopicsTableAnnotationComposer,
+          $$NotificationTopicsTableCreateCompanionBuilder,
+          $$NotificationTopicsTableUpdateCompanionBuilder,
+          (
+            NotificationTopic,
+            BaseReferences<
+              _$CacheDatabase,
+              $NotificationTopicsTable,
+              NotificationTopic
+            >,
+          ),
+          NotificationTopic,
+          PrefetchHooks Function()
+        > {
+  $$NotificationTopicsTableTableManager(
+    _$CacheDatabase db,
+    $NotificationTopicsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NotificationTopicsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NotificationTopicsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NotificationTopicsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> userId = const Value.absent(),
+                Value<String> topic = const Value.absent(),
+              }) => NotificationTopicsCompanion(
+                id: id,
+                userId: userId,
+                topic: topic,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int userId,
+                required String topic,
+              }) => NotificationTopicsCompanion.insert(
+                id: id,
+                userId: userId,
+                topic: topic,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$NotificationTopicsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$CacheDatabase,
+      $NotificationTopicsTable,
+      NotificationTopic,
+      $$NotificationTopicsTableFilterComposer,
+      $$NotificationTopicsTableOrderingComposer,
+      $$NotificationTopicsTableAnnotationComposer,
+      $$NotificationTopicsTableCreateCompanionBuilder,
+      $$NotificationTopicsTableUpdateCompanionBuilder,
+      (
+        NotificationTopic,
+        BaseReferences<
+          _$CacheDatabase,
+          $NotificationTopicsTable,
+          NotificationTopic
+        >,
+      ),
+      NotificationTopic,
+      PrefetchHooks Function()
+    >;
 
 class $CacheDatabaseManager {
   final _$CacheDatabase _db;
@@ -2023,4 +2445,6 @@ class $CacheDatabaseManager {
       $$CourseExamResultItemsTableTableManager(_db, _db.courseExamResultItems);
   $$CachedQuestionItemsTableTableManager get cachedQuestionItems =>
       $$CachedQuestionItemsTableTableManager(_db, _db.cachedQuestionItems);
+  $$NotificationTopicsTableTableManager get notificationTopics =>
+      $$NotificationTopicsTableTableManager(_db, _db.notificationTopics);
 }

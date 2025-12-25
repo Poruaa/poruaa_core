@@ -3,5 +3,7 @@ import 'package:poruaa_core/utils/result.dart';
 
 abstract class TeacherProfileService {
   /// Get teacher profile with all series and courses (public endpoint)
-  Future<Result<TeacherProfileWithSeriesDTO>> getTeacherProfile(int teacherId);
+  Future<Result<EnhancedTeacherProfileWithSeriesDTO>> getTeacherProfile(
+    int teacherId,
+  );
 }

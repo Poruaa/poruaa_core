@@ -7,6 +7,8 @@ import 'package:poruaa_core/data/services/course/model/course_extension_invoice_
 import 'package:poruaa_core/data/services/course/model/course_model.dart';
 import 'package:poruaa_core/data/services/course/model/course_payment_redirect_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
+import 'package:poruaa_core/data/services/course/model/send_course_notification_input_dto.dart';
+import 'package:poruaa_core/data/services/course/model/send_course_notification_response_dto.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
 import 'package:poruaa_core/utils/result.dart';
 import 'package:http/http.dart' as http;
@@ -492,6 +494,38 @@ class CoursesServiceImpl extends CoursesService {
         }
       case Err():
         return Result.error("Failed to generate payment token");
+    }
+  }
+
+  @override
+  Future<Result<SendCourseNotificationResponseDto>> notifyCourse(
+    int teacherId,
+    int courseId,
+    SendCourseNotificationInputDto input,
+  ) async {
+    try {
+      var result = await _apiService.post(
+        "teachers/$teacherId/courses/$courseId/notify",
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(input.toJson()),
+      );
+
+      switch (result) {
+        case Ok():
+          var response = result.value;
+          if (response.statusCode != 200) {
+            return Result.error(response.body);
+          }
+          var jsonBody = jsonDecode(response.body);
+          var notificationResponse = SendCourseNotificationResponseDto.fromJson(
+            jsonBody,
+          );
+          return Result.ok(notificationResponse);
+        case Err():
+          return Result.error("Connection error");
+      }
+    } catch (e) {
+      return Result.error("Error: $e");
     }
   }
 }

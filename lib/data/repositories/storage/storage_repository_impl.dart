@@ -8,7 +8,7 @@ class StorageRepositoryImpl implements StorageRepository {
   final R2StorageService _storageService;
 
   StorageRepositoryImpl({required R2StorageService storageService})
-      : _storageService = storageService;
+    : _storageService = storageService;
 
   @override
   Future<Result<ListFilesResponse>> listFiles(
@@ -100,10 +100,7 @@ class StorageRepositoryImpl implements StorageRepository {
         case Ok():
           AppLogger.debug(
             "Created folder",
-            params: {
-              "teacherId": teacherId,
-              "folderPath": folderPath,
-            },
+            params: {"teacherId": teacherId, "folderPath": folderPath},
           );
           return result;
         case Err():
@@ -123,10 +120,7 @@ class StorageRepositoryImpl implements StorageRepository {
     bool recursive = false,
   }) async {
     try {
-      final request = DeleteRequest(
-        path: path,
-        recursive: recursive,
-      );
+      final request = DeleteRequest(path: path, recursive: recursive);
 
       final result = await _storageService.delete(teacherId, request);
 
@@ -158,10 +152,7 @@ class StorageRepositoryImpl implements StorageRepository {
     String filePath,
   ) async {
     try {
-      final result = await _storageService.getFileMetadata(
-        teacherId,
-        filePath,
-      );
+      final result = await _storageService.getFileMetadata(teacherId, filePath);
 
       switch (result) {
         case Ok():
@@ -205,10 +196,7 @@ class StorageRepositoryImpl implements StorageRepository {
         case Ok():
           AppLogger.debug(
             "Generated download URL",
-            params: {
-              "teacherId": teacherId,
-              "filePath": filePath,
-            },
+            params: {"teacherId": teacherId, "filePath": filePath},
           );
           return result;
         case Err():
@@ -223,5 +211,38 @@ class StorageRepositoryImpl implements StorageRepository {
       return Err(e.toString());
     }
   }
-}
 
+  @override
+  Future<Result<RecomputeFileSizeResponse>> recomputeFileSize(
+    int teacherId,
+    String filePath,
+  ) async {
+    try {
+      final request = RecomputeFileSizeRequest(filePath: filePath);
+
+      final result = await _storageService.recomputeFileSize(
+        teacherId,
+        request,
+      );
+
+      switch (result) {
+        case Ok():
+          AppLogger.debug(
+            "Recomputed file size",
+            params: {
+              "teacherId": teacherId,
+              "filePath": filePath,
+              "sizeBytes": result.value.sizeBytes,
+            },
+          );
+          return result;
+        case Err():
+          AppLogger.error("Failed to recompute file size", error: result.error);
+          return result;
+      }
+    } catch (e) {
+      AppLogger.error("Error recomputing file size", error: e);
+      return Err(e.toString());
+    }
+  }
+}

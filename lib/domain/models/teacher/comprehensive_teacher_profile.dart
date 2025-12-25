@@ -116,15 +116,11 @@ class TeacherProfile {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class TeachingPhilosophy {
-  final String quote;
-  final String description;
+  final String? quote;
+  final String? description;
   final List<TeachingPrinciple> principles;
 
-  TeachingPhilosophy({
-    required this.quote,
-    required this.description,
-    required this.principles,
-  });
+  TeachingPhilosophy({this.quote, this.description, required this.principles});
 
   factory TeachingPhilosophy.fromJson(Map<String, dynamic> json) =>
       _$TeachingPhilosophyFromJson(json);
@@ -154,16 +150,16 @@ class TeachingPrinciple {
 class Specialization {
   final int id;
   final String title;
-  final String icon;
+  final String? icon;
   final List<String> skills;
   final DateTime? createdAt;
 
   Specialization({
     required this.id,
     required this.title,
-    required this.icon,
+    this.icon,
     required this.skills,
-    required this.createdAt,
+    this.createdAt,
   });
 
   factory Specialization.fromJson(Map<String, dynamic> json) =>

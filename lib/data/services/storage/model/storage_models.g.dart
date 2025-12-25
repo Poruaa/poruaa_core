@@ -164,3 +164,33 @@ Map<String, dynamic> _$DownloadUrlResponseToJson(
   'download_url': instance.downloadUrl,
   'expires_in_seconds': instance.expiresInSeconds,
 };
+
+RecomputeFileSizeRequest _$RecomputeFileSizeRequestFromJson(
+  Map<String, dynamic> json,
+) => RecomputeFileSizeRequest(filePath: json['file_path'] as String);
+
+Map<String, dynamic> _$RecomputeFileSizeRequestToJson(
+  RecomputeFileSizeRequest instance,
+) => <String, dynamic>{'file_path': instance.filePath};
+
+RecomputeFileSizeResponse _$RecomputeFileSizeResponseFromJson(
+  Map<String, dynamic> json,
+) => RecomputeFileSizeResponse(
+  success: json['success'] as bool,
+  filePath: json['file_path'] as String,
+  sizeBytes: (json['size_bytes'] as num).toInt(),
+  contentType: json['content_type'] as String?,
+  etag: json['etag'] as String?,
+  message: json['message'] as String,
+);
+
+Map<String, dynamic> _$RecomputeFileSizeResponseToJson(
+  RecomputeFileSizeResponse instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  'file_path': instance.filePath,
+  'size_bytes': instance.sizeBytes,
+  'content_type': instance.contentType,
+  'etag': instance.etag,
+  'message': instance.message,
+};

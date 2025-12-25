@@ -33,4 +33,10 @@ abstract class R2StorageService {
     int teacherId,
     DownloadUrlRequest request,
   );
+
+  /// Recompute file size from R2 and update database
+  Future<Result<RecomputeFileSizeResponse>> recomputeFileSize(
+    int teacherId,
+    RecomputeFileSizeRequest request,
+  );
 }

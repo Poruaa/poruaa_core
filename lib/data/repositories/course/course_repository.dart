@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:poruaa_core/data/services/course/model/course_extension_invoice_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_payment_redirect_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
+import 'package:poruaa_core/data/services/course/model/send_course_notification_input_dto.dart';
+import 'package:poruaa_core/data/services/course/model/send_course_notification_response_dto.dart';
 import 'package:poruaa_core/domain/models/course/course.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
 import 'package:poruaa_core/utils/result.dart';
@@ -53,6 +55,11 @@ abstract class CourseRepository {
   );
 
   Future<Result<CoursePaymentRedirectDTO>> generatePaymentToken(int courseId);
+
+  Future<Result<SendCourseNotificationResponseDto>> notifyCourse(
+    int courseId,
+    SendCourseNotificationInputDto input,
+  );
 
   Future<Result<Course>> getCourse(int id, {bool refresh = false});
   Stream<Result<Course>> watchCourse(int courseId);

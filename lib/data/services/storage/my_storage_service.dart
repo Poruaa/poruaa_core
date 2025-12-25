@@ -2,8 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:poruaa_core/data/services/storage/storage_service.dart';
 
 class MyStorageService extends StorageService {
-  AndroidOptions _getAndroidOptions() =>
-      const AndroidOptions(encryptedSharedPreferences: true);
+  AndroidOptions _getAndroidOptions() => const AndroidOptions();
 
   WindowsOptions _getWindowsOptions() =>
       const WindowsOptions(useBackwardCompatibility: true);

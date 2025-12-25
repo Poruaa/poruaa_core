@@ -206,3 +206,41 @@ class DownloadUrlResponse {
 
   Map<String, dynamic> toJson() => _$DownloadUrlResponseToJson(this);
 }
+
+/// Request to recompute file size
+@JsonSerializable(fieldRename: FieldRename.snake)
+class RecomputeFileSizeRequest {
+  final String filePath;
+
+  RecomputeFileSizeRequest({required this.filePath});
+
+  factory RecomputeFileSizeRequest.fromJson(Map<String, dynamic> json) =>
+      _$RecomputeFileSizeRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RecomputeFileSizeRequestToJson(this);
+}
+
+/// Response from recomputing file size
+@JsonSerializable(fieldRename: FieldRename.snake)
+class RecomputeFileSizeResponse {
+  final bool success;
+  final String filePath;
+  final int sizeBytes;
+  final String? contentType;
+  final String? etag;
+  final String message;
+
+  RecomputeFileSizeResponse({
+    required this.success,
+    required this.filePath,
+    required this.sizeBytes,
+    this.contentType,
+    this.etag,
+    required this.message,
+  });
+
+  factory RecomputeFileSizeResponse.fromJson(Map<String, dynamic> json) =>
+      _$RecomputeFileSizeResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RecomputeFileSizeResponseToJson(this);
+}

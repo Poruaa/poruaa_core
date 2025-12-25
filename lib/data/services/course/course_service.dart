@@ -4,6 +4,8 @@ import 'package:poruaa_core/data/services/course/model/course_extension_invoice_
 import 'package:poruaa_core/data/services/course/model/course_model.dart';
 import 'package:poruaa_core/data/services/course/model/course_payment_redirect_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
+import 'package:poruaa_core/data/services/course/model/send_course_notification_input_dto.dart';
+import 'package:poruaa_core/data/services/course/model/send_course_notification_response_dto.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
 import 'package:poruaa_core/utils/result.dart';
 
@@ -67,6 +69,12 @@ abstract class CoursesService {
   );
 
   Future<Result<CoursePaymentRedirectDTO>> generatePaymentToken(int courseId);
+
+  Future<Result<SendCourseNotificationResponseDto>> notifyCourse(
+    int teacherId,
+    int courseId,
+    SendCourseNotificationInputDto input,
+  );
 
   Future<Result<bool>> delete(int teacherId, int id);
 }

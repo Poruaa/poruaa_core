@@ -79,7 +79,20 @@ class CachedQuestionItems extends Table {
   ];
 }
 
-@DriftDatabase(tables: [CourseExamResultItems, CachedQuestionItems])
+class NotificationTopics extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().customConstraint('NOT NULL')();
+  TextColumn get topic => text().customConstraint('NOT NULL')();
+
+  @override
+  List<String> get customConstraints => [
+    'UNIQUE(user_id, topic)', // One topic per user
+  ];
+}
+
+@DriftDatabase(
+  tables: [CourseExamResultItems, CachedQuestionItems, NotificationTopics],
+)
 class CacheDatabase extends _$CacheDatabase {
   CacheDatabase([QueryExecutor? executor])
     : super(executor ?? _openConnection());
@@ -125,5 +138,5 @@ class CacheDatabase extends _$CacheDatabase {
   }
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 }

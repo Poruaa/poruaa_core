@@ -11,7 +11,7 @@ class TeacherProfileServiceImpl implements TeacherProfileService {
   TeacherProfileServiceImpl(this._apiService);
 
   @override
-  Future<Result<TeacherProfileWithSeriesDTO>> getTeacherProfile(
+  Future<Result<EnhancedTeacherProfileWithSeriesDTO>> getTeacherProfile(
     int teacherId,
   ) async {
     try {
@@ -20,7 +20,7 @@ class TeacherProfileServiceImpl implements TeacherProfileService {
       return result.fold((response) {
         if (response.statusCode == 200) {
           final json = jsonDecode(response.body) as Map<String, dynamic>;
-          final profile = TeacherProfileWithSeriesDTO.fromJson(json);
+          final profile = EnhancedTeacherProfileWithSeriesDTO.fromJson(json);
           return Result.ok(profile);
         } else if (response.statusCode == 404) {
           return Result.error('Teacher not found');

@@ -6,6 +6,8 @@ import 'package:poruaa_core/data/services/course/course_service.dart';
 import 'package:poruaa_core/data/services/course/model/course_extension_invoice_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_payment_redirect_dto.dart';
 import 'package:poruaa_core/data/services/course/model/course_publish_cost_info_dto.dart';
+import 'package:poruaa_core/data/services/course/model/send_course_notification_input_dto.dart';
+import 'package:poruaa_core/data/services/course/model/send_course_notification_response_dto.dart';
 import 'package:poruaa_core/data/dao/course/course_dao.dart';
 import 'package:poruaa_core/domain/models/course/course.dart';
 import 'package:poruaa_core/domain/models/pagination/pagination_state.dart';
@@ -448,6 +450,18 @@ class CourseRepositoryImpl extends CourseRepository {
     int courseId,
   ) async {
     return await _coursesService.generatePaymentToken(courseId);
+  }
+
+  @override
+  Future<Result<SendCourseNotificationResponseDto>> notifyCourse(
+    int courseId,
+    SendCourseNotificationInputDto input,
+  ) async {
+    return await _coursesService.notifyCourse(
+      _userRepository.getCurrentUserId,
+      courseId,
+      input,
+    );
   }
 
   // Pagination state management
