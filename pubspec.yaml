@@ -41,6 +41,7 @@ dependencies:
   decimal: ^3.2.4
   archive: ^4.0.7
   web_socket_channel: ^3.0.1
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:
