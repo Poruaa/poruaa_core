@@ -78,6 +78,8 @@ import 'package:poruaa_core/data/repositories/support/support_repository.dart';
 import 'package:poruaa_core/data/repositories/support/support_repository_impl.dart';
 import 'package:poruaa_core/data/repositories/fcm/fcm_repository.dart';
 import 'package:poruaa_core/data/repositories/fcm/fcm_repository_impl.dart';
+import 'package:poruaa_core/data/repositories/teacher_notification/teacher_notification_repository.dart';
+import 'package:poruaa_core/data/repositories/teacher_notification/teacher_notification_repository_impl.dart';
 
 class UserScopeWidget extends StatefulWidget {
   const UserScopeWidget({
@@ -385,6 +387,11 @@ class _UserScopeWidgetState extends State<UserScopeWidget> {
             // FCM Repository
             Provider<FcmRepository>(
               create: (context) => FcmRepositoryImpl(context.read()),
+            ),
+            // Teacher Notification Repository
+            Provider<TeacherNotificationRepository>(
+              create: (context) =>
+                  TeacherNotificationRepositoryImpl(context.read()),
             ),
             ...(widget.additionalProviders ?? []),
           ],

@@ -52,6 +52,8 @@ import 'package:poruaa_core/data/services/storage/r2_storage_service.dart';
 import 'package:poruaa_core/data/services/storage/r2_storage_service_impl.dart';
 import 'package:poruaa_core/data/services/storage/storage_service.dart';
 import 'package:poruaa_core/data/services/teacher/comprehensive_teacher_service.dart';
+import 'package:poruaa_core/data/services/teacher/teacher_notification_service.dart';
+import 'package:poruaa_core/data/services/teacher/teacher_notification_service_impl.dart';
 import 'package:poruaa_core/data/services/user/user_service_impl.dart';
 import 'package:poruaa_core/data/services/user/user_service.dart';
 import 'package:poruaa_core/data/services/wallet/wallet_service.dart';
@@ -222,6 +224,10 @@ List<Provider<Object>> getMainProviders(
     Provider<TeacherBookmarkService>(
       create: (context) =>
           TeacherBookmarkServiceImpl(context.read(), context.read()),
+    ),
+    // Teacher Notification Services
+    Provider<TeacherNotificationService>(
+      create: (context) => TeacherNotificationServiceImpl(context.read()),
     ),
     // Note Services
     Provider<NoteService>(create: (context) => NoteServiceImpl(context.read())),
