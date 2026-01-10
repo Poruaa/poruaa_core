@@ -7,7 +7,7 @@ import 'package:poruaa_core/data/repositories/auth/auth_repository.dart';
 import 'package:poruaa_core/data/repositories/auth/auth_repository_impl.dart';
 import 'package:poruaa_core/data/repositories/config/config_repository.dart';
 import 'package:poruaa_core/data/repositories/config/config_repository_impl.dart';
-import 'package:poruaa_core/data/repositories/gemini_api_key/gemini_api_key_repository.dart';
+// import 'package:poruaa_core/data/repositories/gemini_api_key/gemini_api_key_repository.dart';
 import 'package:poruaa_core/data/repositories/invoice/invoice_repository.dart';
 import 'package:poruaa_core/data/repositories/r2_credential/r2_credentials_repository.dart';
 import 'package:poruaa_core/data/repositories/theme/theme_repository.dart';
@@ -190,9 +190,9 @@ List<Provider<Object>> getMainProviders(
         context.read(),
       ),
     ),
-    Provider<GeminiApiKeyRepository>(
-      create: (context) => GeminiApiKeyRepository(context.read()),
-    ),
+    // Provider<GeminiApiKeyRepository>(
+    //   create: (context) => GeminiApiKeyRepository(context.read()),
+    // ),
     Provider<R2CredentialsRepository>(
       create: (context) => R2CredentialsRepository(context.read()),
     ),

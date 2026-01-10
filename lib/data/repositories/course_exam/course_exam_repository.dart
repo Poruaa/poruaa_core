@@ -3,6 +3,10 @@ import 'package:drift/drift.dart';
 import 'package:poruaa_core/data/repositories/user/user_repository.dart';
 import 'package:poruaa_core/data/services/course_exam/course_exam_service.dart';
 import 'package:poruaa_core/data/services/course_exam/model/publish_ranks_response.dart';
+import 'package:poruaa_core/data/services/course_exam/model/upload_written_answer_response.dart';
+import 'package:poruaa_core/data/services/course_exam/model/notify_upload_success_response.dart';
+import 'package:poruaa_core/data/services/course_exam/model/written_answer_for_grading.dart';
+import 'package:poruaa_core/data/services/course_exam/model/grade_written_response.dart';
 import 'package:poruaa_core/data/dao/course_exam/course_exam_dao.dart';
 import 'package:poruaa_core/data/dao/cache/exam_result_cache_dao.dart';
 import 'package:poruaa_core/data/dao/db/database.dart';
@@ -242,10 +246,15 @@ class CourseExamRepository {
 
   Future<Result<ExamResult>> submitCourseExamOfStudentByMeByCourseExamId(
     int courseExamId,
-    Map<int, int> answers,
-  ) async {
+    Map<int, int> answers, {
+    Map<int, String>? writtenAnswers,
+  }) async {
     var result = await _courseExamService
-        .submitCourseExamOfStudentByMeByCourseExamId(courseExamId, answers);
+        .submitCourseExamOfStudentByMeByCourseExamId(
+          courseExamId,
+          answers,
+          writtenAnswers: writtenAnswers,
+        );
 
     switch (result) {
       case Ok(:final value):
@@ -282,16 +291,18 @@ class CourseExamRepository {
               .getExamResultByCourseExamId(studentId, courseExamId);
 
           if (cachedResult != null) {
+            // Preserve writtenAnswers from the fresh backend result
             return Result.ok(
               cachedResult.copyWith(
                 questions: examResult.questions,
                 rank: examResult.rank,
+                writtenAnswers:
+                    examResult.writtenAnswers, // Preserve writtenAnswers
               ),
             );
           } else {
+            // No cache available, return the backend result (which has writtenAnswers)
             return Result.ok(examResult);
-            // No cache available, return the backend error
-            // return Result.error("No exam result available");
           }
         }
       case Err():
@@ -372,5 +383,85 @@ class CourseExamRepository {
       resultId,
     );
     return result.map((value) => ExamResult.fromModel(value));
+  }
+
+  // Written Answer Methods
+
+  /// Get presigned URL for uploading written answer image
+  Future<Result<UploadWrittenAnswerResponse>> getUploadWrittenAnswerUrl(
+    int courseExamId,
+    int questionId,
+    String fileName,
+  ) async {
+    return await _courseExamService.getUploadWrittenAnswerUrl(
+      courseExamId,
+      questionId,
+      fileName,
+    );
+  }
+
+  /// Notify backend after successful image upload
+  Future<Result<NotifyUploadSuccessResponse>> notifyUploadSuccess(
+    int courseExamId,
+    int storageFileId,
+  ) async {
+    return await _courseExamService.notifyUploadSuccess(
+      courseExamId,
+      storageFileId,
+    );
+  }
+
+  /// Get all written answers for grading (teacher)
+  Future<Result<List<WrittenAnswerForGrading>>> getWrittenAnswersForGrading(
+    int courseExamId,
+  ) async {
+    return await _courseExamService.getWrittenAnswersForGrading(
+      _userRepository.getCurrentUserId,
+      courseExamId,
+    );
+  }
+
+  /// Grade a written answer (teacher)
+  Future<Result<GradeWrittenResponse>> gradeWrittenAnswer(
+    int courseExamId,
+    int studentId,
+    int questionId,
+    double awardedMark, {
+    String? feedback,
+  }) async {
+    return await _courseExamService.gradeWrittenAnswer(
+      _userRepository.getCurrentUserId,
+      courseExamId,
+      studentId,
+      questionId,
+      awardedMark,
+      feedback: feedback,
+    );
+  }
+
+  /// Get presigned URL for replacing written answer image (teacher)
+  Future<Result<UploadWrittenAnswerResponse>> getReplaceWrittenAnswerUrl(
+    int courseExamId,
+    int studentId,
+    int questionId,
+  ) async {
+    return await _courseExamService.getReplaceWrittenAnswerUrl(
+      _userRepository.getCurrentUserId,
+      courseExamId,
+      studentId,
+      questionId,
+    );
+  }
+
+  /// Notify backend after successful image replacement (teacher)
+  Future<Result<NotifyUploadSuccessResponse>> notifyReplaceSuccess(
+    int courseExamId,
+    int storageFileId,
+  ) async {
+    return await _courseExamService.notifyReplaceSuccess(
+      _userRepository.getCurrentUserId,
+      courseExamId,
+      storageFileId,
+    );
   }
 }

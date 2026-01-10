@@ -1145,6 +1145,28 @@ class $QuestionItemsTable extends QuestionItems
       'REFERENCES exam_items (id)',
     ),
   );
+  static const VerificationMeta _questionTypeMeta = const VerificationMeta(
+    'questionType',
+  );
+  @override
+  late final GeneratedColumn<String> questionType = GeneratedColumn<String>(
+    'question_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('mcq'),
+  );
+  static const VerificationMeta _markMeta = const VerificationMeta('mark');
+  @override
+  late final GeneratedColumn<double> mark = GeneratedColumn<double>(
+    'mark',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1.0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1154,6 +1176,8 @@ class $QuestionItemsTable extends QuestionItems
     answer,
     solution,
     examId,
+    questionType,
+    mark,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1206,6 +1230,21 @@ class $QuestionItemsTable extends QuestionItems
     } else if (isInserting) {
       context.missing(_examIdMeta);
     }
+    if (data.containsKey('question_type')) {
+      context.handle(
+        _questionTypeMeta,
+        questionType.isAcceptableOrUnknown(
+          data['question_type']!,
+          _questionTypeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('mark')) {
+      context.handle(
+        _markMeta,
+        mark.isAcceptableOrUnknown(data['mark']!, _markMeta),
+      );
+    }
     return context;
   }
 
@@ -1245,6 +1284,14 @@ class $QuestionItemsTable extends QuestionItems
         DriftSqlType.int,
         data['${effectivePrefix}exam_id'],
       )!,
+      questionType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}question_type'],
+      )!,
+      mark: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}mark'],
+      )!,
     );
   }
 
@@ -1267,6 +1314,8 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
   final int answer;
   final String? solution;
   final int examId;
+  final String questionType;
+  final double mark;
   const QuestionItem({
     required this.id,
     required this.question,
@@ -1275,6 +1324,8 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
     required this.answer,
     this.solution,
     required this.examId,
+    required this.questionType,
+    required this.mark,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1294,6 +1345,8 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
       map['solution'] = Variable<String>(solution);
     }
     map['exam_id'] = Variable<int>(examId);
+    map['question_type'] = Variable<String>(questionType);
+    map['mark'] = Variable<double>(mark);
     return map;
   }
 
@@ -1312,6 +1365,8 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
           ? const Value.absent()
           : Value(solution),
       examId: Value(examId),
+      questionType: Value(questionType),
+      mark: Value(mark),
     );
   }
 
@@ -1328,6 +1383,8 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
       answer: serializer.fromJson<int>(json['answer']),
       solution: serializer.fromJson<String?>(json['solution']),
       examId: serializer.fromJson<int>(json['examId']),
+      questionType: serializer.fromJson<String>(json['questionType']),
+      mark: serializer.fromJson<double>(json['mark']),
     );
   }
   @override
@@ -1341,6 +1398,8 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
       'answer': serializer.toJson<int>(answer),
       'solution': serializer.toJson<String?>(solution),
       'examId': serializer.toJson<int>(examId),
+      'questionType': serializer.toJson<String>(questionType),
+      'mark': serializer.toJson<double>(mark),
     };
   }
 
@@ -1352,6 +1411,8 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
     int? answer,
     Value<String?> solution = const Value.absent(),
     int? examId,
+    String? questionType,
+    double? mark,
   }) => QuestionItem(
     id: id ?? this.id,
     question: question ?? this.question,
@@ -1360,6 +1421,8 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
     answer: answer ?? this.answer,
     solution: solution.present ? solution.value : this.solution,
     examId: examId ?? this.examId,
+    questionType: questionType ?? this.questionType,
+    mark: mark ?? this.mark,
   );
   QuestionItem copyWithCompanion(QuestionItemsCompanion data) {
     return QuestionItem(
@@ -1370,6 +1433,10 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
       answer: data.answer.present ? data.answer.value : this.answer,
       solution: data.solution.present ? data.solution.value : this.solution,
       examId: data.examId.present ? data.examId.value : this.examId,
+      questionType: data.questionType.present
+          ? data.questionType.value
+          : this.questionType,
+      mark: data.mark.present ? data.mark.value : this.mark,
     );
   }
 
@@ -1382,14 +1449,25 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
           ..write('options: $options, ')
           ..write('answer: $answer, ')
           ..write('solution: $solution, ')
-          ..write('examId: $examId')
+          ..write('examId: $examId, ')
+          ..write('questionType: $questionType, ')
+          ..write('mark: $mark')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, question, createdAt, options, answer, solution, examId);
+  int get hashCode => Object.hash(
+    id,
+    question,
+    createdAt,
+    options,
+    answer,
+    solution,
+    examId,
+    questionType,
+    mark,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1400,7 +1478,9 @@ class QuestionItem extends DataClass implements Insertable<QuestionItem> {
           other.options == this.options &&
           other.answer == this.answer &&
           other.solution == this.solution &&
-          other.examId == this.examId);
+          other.examId == this.examId &&
+          other.questionType == this.questionType &&
+          other.mark == this.mark);
 }
 
 class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
@@ -1411,6 +1491,8 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
   final Value<int> answer;
   final Value<String?> solution;
   final Value<int> examId;
+  final Value<String> questionType;
+  final Value<double> mark;
   const QuestionItemsCompanion({
     this.id = const Value.absent(),
     this.question = const Value.absent(),
@@ -1419,6 +1501,8 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
     this.answer = const Value.absent(),
     this.solution = const Value.absent(),
     this.examId = const Value.absent(),
+    this.questionType = const Value.absent(),
+    this.mark = const Value.absent(),
   });
   QuestionItemsCompanion.insert({
     this.id = const Value.absent(),
@@ -1428,6 +1512,8 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
     required int answer,
     this.solution = const Value.absent(),
     required int examId,
+    this.questionType = const Value.absent(),
+    this.mark = const Value.absent(),
   }) : question = Value(question),
        answer = Value(answer),
        examId = Value(examId);
@@ -1439,6 +1525,8 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
     Expression<int>? answer,
     Expression<String>? solution,
     Expression<int>? examId,
+    Expression<String>? questionType,
+    Expression<double>? mark,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1448,6 +1536,8 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
       if (answer != null) 'answer': answer,
       if (solution != null) 'solution': solution,
       if (examId != null) 'exam_id': examId,
+      if (questionType != null) 'question_type': questionType,
+      if (mark != null) 'mark': mark,
     });
   }
 
@@ -1459,6 +1549,8 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
     Value<int>? answer,
     Value<String?>? solution,
     Value<int>? examId,
+    Value<String>? questionType,
+    Value<double>? mark,
   }) {
     return QuestionItemsCompanion(
       id: id ?? this.id,
@@ -1468,6 +1560,8 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
       answer: answer ?? this.answer,
       solution: solution ?? this.solution,
       examId: examId ?? this.examId,
+      questionType: questionType ?? this.questionType,
+      mark: mark ?? this.mark,
     );
   }
 
@@ -1497,6 +1591,12 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
     if (examId.present) {
       map['exam_id'] = Variable<int>(examId.value);
     }
+    if (questionType.present) {
+      map['question_type'] = Variable<String>(questionType.value);
+    }
+    if (mark.present) {
+      map['mark'] = Variable<double>(mark.value);
+    }
     return map;
   }
 
@@ -1509,7 +1609,9 @@ class QuestionItemsCompanion extends UpdateCompanion<QuestionItem> {
           ..write('options: $options, ')
           ..write('answer: $answer, ')
           ..write('solution: $solution, ')
-          ..write('examId: $examId')
+          ..write('examId: $examId, ')
+          ..write('questionType: $questionType, ')
+          ..write('mark: $mark')
           ..write(')'))
         .toString();
   }
@@ -12102,6 +12204,8 @@ typedef $$QuestionItemsTableCreateCompanionBuilder =
       required int answer,
       Value<String?> solution,
       required int examId,
+      Value<String> questionType,
+      Value<double> mark,
     });
 typedef $$QuestionItemsTableUpdateCompanionBuilder =
     QuestionItemsCompanion Function({
@@ -12112,6 +12216,8 @@ typedef $$QuestionItemsTableUpdateCompanionBuilder =
       Value<int> answer,
       Value<String?> solution,
       Value<int> examId,
+      Value<String> questionType,
+      Value<double> mark,
     });
 
 final class $$QuestionItemsTableReferences
@@ -12182,6 +12288,16 @@ class $$QuestionItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get questionType => $composableBuilder(
+    column: $table.questionType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get mark => $composableBuilder(
+    column: $table.mark,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$ExamItemsTableFilterComposer get examId {
     final $$ExamItemsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -12245,6 +12361,16 @@ class $$QuestionItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get questionType => $composableBuilder(
+    column: $table.questionType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get mark => $composableBuilder(
+    column: $table.mark,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$ExamItemsTableOrderingComposer get examId {
     final $$ExamItemsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -12295,6 +12421,14 @@ class $$QuestionItemsTableAnnotationComposer
 
   GeneratedColumn<String> get solution =>
       $composableBuilder(column: $table.solution, builder: (column) => column);
+
+  GeneratedColumn<String> get questionType => $composableBuilder(
+    column: $table.questionType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get mark =>
+      $composableBuilder(column: $table.mark, builder: (column) => column);
 
   $$ExamItemsTableAnnotationComposer get examId {
     final $$ExamItemsTableAnnotationComposer composer = $composerBuilder(
@@ -12355,6 +12489,8 @@ class $$QuestionItemsTableTableManager
                 Value<int> answer = const Value.absent(),
                 Value<String?> solution = const Value.absent(),
                 Value<int> examId = const Value.absent(),
+                Value<String> questionType = const Value.absent(),
+                Value<double> mark = const Value.absent(),
               }) => QuestionItemsCompanion(
                 id: id,
                 question: question,
@@ -12363,6 +12499,8 @@ class $$QuestionItemsTableTableManager
                 answer: answer,
                 solution: solution,
                 examId: examId,
+                questionType: questionType,
+                mark: mark,
               ),
           createCompanionCallback:
               ({
@@ -12373,6 +12511,8 @@ class $$QuestionItemsTableTableManager
                 required int answer,
                 Value<String?> solution = const Value.absent(),
                 required int examId,
+                Value<String> questionType = const Value.absent(),
+                Value<double> mark = const Value.absent(),
               }) => QuestionItemsCompanion.insert(
                 id: id,
                 question: question,
@@ -12381,6 +12521,8 @@ class $$QuestionItemsTableTableManager
                 answer: answer,
                 solution: solution,
                 examId: examId,
+                questionType: questionType,
+                mark: mark,
               ),
           withReferenceMapper: (p0) => p0
               .map(

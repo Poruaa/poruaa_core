@@ -24,6 +24,8 @@ class QuestionItems extends Table {
   IntColumn get answer => integer().customConstraint('NOT NULL')();
   TextColumn get solution => text().nullable()();
   IntColumn get examId => integer().references(ExamItems, #id)();
+  TextColumn get questionType => text().withDefault(const Constant('mcq'))();
+  RealColumn get mark => real().withDefault(const Constant(1.0))();
 }
 
 class TeacherItems extends Table {

@@ -839,6 +839,28 @@ class $CachedQuestionItemsTable extends CachedQuestionItems
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _questionTypeMeta = const VerificationMeta(
+    'questionType',
+  );
+  @override
+  late final GeneratedColumn<String> questionType = GeneratedColumn<String>(
+    'question_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('mcq'),
+  );
+  static const VerificationMeta _markMeta = const VerificationMeta('mark');
+  @override
+  late final GeneratedColumn<double> mark = GeneratedColumn<double>(
+    'mark',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1.0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -851,6 +873,8 @@ class $CachedQuestionItemsTable extends CachedQuestionItems
     solution,
     examId,
     createdAt,
+    questionType,
+    mark,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -930,6 +954,21 @@ class $CachedQuestionItemsTable extends CachedQuestionItems
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('question_type')) {
+      context.handle(
+        _questionTypeMeta,
+        questionType.isAcceptableOrUnknown(
+          data['question_type']!,
+          _questionTypeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('mark')) {
+      context.handle(
+        _markMeta,
+        mark.isAcceptableOrUnknown(data['mark']!, _markMeta),
+      );
+    }
     return context;
   }
 
@@ -981,6 +1020,14 @@ class $CachedQuestionItemsTable extends CachedQuestionItems
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       ),
+      questionType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}question_type'],
+      )!,
+      mark: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}mark'],
+      )!,
     );
   }
 
@@ -1007,6 +1054,8 @@ class CachedQuestionItem extends DataClass
   final String? solution;
   final int examId;
   final DateTime? createdAt;
+  final String questionType;
+  final double mark;
   const CachedQuestionItem({
     required this.id,
     required this.studentId,
@@ -1018,6 +1067,8 @@ class CachedQuestionItem extends DataClass
     this.solution,
     required this.examId,
     this.createdAt,
+    required this.questionType,
+    required this.mark,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1040,6 +1091,8 @@ class CachedQuestionItem extends DataClass
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
     }
+    map['question_type'] = Variable<String>(questionType);
+    map['mark'] = Variable<double>(mark);
     return map;
   }
 
@@ -1061,6 +1114,8 @@ class CachedQuestionItem extends DataClass
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
+      questionType: Value(questionType),
+      mark: Value(mark),
     );
   }
 
@@ -1080,6 +1135,8 @@ class CachedQuestionItem extends DataClass
       solution: serializer.fromJson<String?>(json['solution']),
       examId: serializer.fromJson<int>(json['examId']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      questionType: serializer.fromJson<String>(json['questionType']),
+      mark: serializer.fromJson<double>(json['mark']),
     );
   }
   @override
@@ -1096,6 +1153,8 @@ class CachedQuestionItem extends DataClass
       'solution': serializer.toJson<String?>(solution),
       'examId': serializer.toJson<int>(examId),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'questionType': serializer.toJson<String>(questionType),
+      'mark': serializer.toJson<double>(mark),
     };
   }
 
@@ -1110,6 +1169,8 @@ class CachedQuestionItem extends DataClass
     Value<String?> solution = const Value.absent(),
     int? examId,
     Value<DateTime?> createdAt = const Value.absent(),
+    String? questionType,
+    double? mark,
   }) => CachedQuestionItem(
     id: id ?? this.id,
     studentId: studentId ?? this.studentId,
@@ -1121,6 +1182,8 @@ class CachedQuestionItem extends DataClass
     solution: solution.present ? solution.value : this.solution,
     examId: examId ?? this.examId,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    questionType: questionType ?? this.questionType,
+    mark: mark ?? this.mark,
   );
   CachedQuestionItem copyWithCompanion(CachedQuestionItemsCompanion data) {
     return CachedQuestionItem(
@@ -1138,6 +1201,10 @@ class CachedQuestionItem extends DataClass
       solution: data.solution.present ? data.solution.value : this.solution,
       examId: data.examId.present ? data.examId.value : this.examId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      questionType: data.questionType.present
+          ? data.questionType.value
+          : this.questionType,
+      mark: data.mark.present ? data.mark.value : this.mark,
     );
   }
 
@@ -1153,7 +1220,9 @@ class CachedQuestionItem extends DataClass
           ..write('answer: $answer, ')
           ..write('solution: $solution, ')
           ..write('examId: $examId, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('questionType: $questionType, ')
+          ..write('mark: $mark')
           ..write(')'))
         .toString();
   }
@@ -1170,6 +1239,8 @@ class CachedQuestionItem extends DataClass
     solution,
     examId,
     createdAt,
+    questionType,
+    mark,
   );
   @override
   bool operator ==(Object other) =>
@@ -1184,7 +1255,9 @@ class CachedQuestionItem extends DataClass
           other.answer == this.answer &&
           other.solution == this.solution &&
           other.examId == this.examId &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.questionType == this.questionType &&
+          other.mark == this.mark);
 }
 
 class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
@@ -1198,6 +1271,8 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
   final Value<String?> solution;
   final Value<int> examId;
   final Value<DateTime?> createdAt;
+  final Value<String> questionType;
+  final Value<double> mark;
   const CachedQuestionItemsCompanion({
     this.id = const Value.absent(),
     this.studentId = const Value.absent(),
@@ -1209,6 +1284,8 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
     this.solution = const Value.absent(),
     this.examId = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.questionType = const Value.absent(),
+    this.mark = const Value.absent(),
   });
   CachedQuestionItemsCompanion.insert({
     this.id = const Value.absent(),
@@ -1221,6 +1298,8 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
     this.solution = const Value.absent(),
     required int examId,
     this.createdAt = const Value.absent(),
+    this.questionType = const Value.absent(),
+    this.mark = const Value.absent(),
   }) : studentId = Value(studentId),
        courseExamId = Value(courseExamId),
        questionId = Value(questionId),
@@ -1238,6 +1317,8 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
     Expression<String>? solution,
     Expression<int>? examId,
     Expression<DateTime>? createdAt,
+    Expression<String>? questionType,
+    Expression<double>? mark,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1250,6 +1331,8 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
       if (solution != null) 'solution': solution,
       if (examId != null) 'exam_id': examId,
       if (createdAt != null) 'created_at': createdAt,
+      if (questionType != null) 'question_type': questionType,
+      if (mark != null) 'mark': mark,
     });
   }
 
@@ -1264,6 +1347,8 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
     Value<String?>? solution,
     Value<int>? examId,
     Value<DateTime?>? createdAt,
+    Value<String>? questionType,
+    Value<double>? mark,
   }) {
     return CachedQuestionItemsCompanion(
       id: id ?? this.id,
@@ -1276,6 +1361,8 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
       solution: solution ?? this.solution,
       examId: examId ?? this.examId,
       createdAt: createdAt ?? this.createdAt,
+      questionType: questionType ?? this.questionType,
+      mark: mark ?? this.mark,
     );
   }
 
@@ -1314,6 +1401,12 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (questionType.present) {
+      map['question_type'] = Variable<String>(questionType.value);
+    }
+    if (mark.present) {
+      map['mark'] = Variable<double>(mark.value);
+    }
     return map;
   }
 
@@ -1329,7 +1422,9 @@ class CachedQuestionItemsCompanion extends UpdateCompanion<CachedQuestionItem> {
           ..write('answer: $answer, ')
           ..write('solution: $solution, ')
           ..write('examId: $examId, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('questionType: $questionType, ')
+          ..write('mark: $mark')
           ..write(')'))
         .toString();
   }
@@ -1970,6 +2065,8 @@ typedef $$CachedQuestionItemsTableCreateCompanionBuilder =
       Value<String?> solution,
       required int examId,
       Value<DateTime?> createdAt,
+      Value<String> questionType,
+      Value<double> mark,
     });
 typedef $$CachedQuestionItemsTableUpdateCompanionBuilder =
     CachedQuestionItemsCompanion Function({
@@ -1983,6 +2080,8 @@ typedef $$CachedQuestionItemsTableUpdateCompanionBuilder =
       Value<String?> solution,
       Value<int> examId,
       Value<DateTime?> createdAt,
+      Value<String> questionType,
+      Value<double> mark,
     });
 
 class $$CachedQuestionItemsTableFilterComposer
@@ -2042,6 +2141,16 @@ class $$CachedQuestionItemsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get questionType => $composableBuilder(
+    column: $table.questionType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get mark => $composableBuilder(
+    column: $table.mark,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2104,6 +2213,16 @@ class $$CachedQuestionItemsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get questionType => $composableBuilder(
+    column: $table.questionType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get mark => $composableBuilder(
+    column: $table.mark,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CachedQuestionItemsTableAnnotationComposer
@@ -2148,6 +2267,14 @@ class $$CachedQuestionItemsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get questionType => $composableBuilder(
+    column: $table.questionType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get mark =>
+      $composableBuilder(column: $table.mark, builder: (column) => column);
 }
 
 class $$CachedQuestionItemsTableTableManager
@@ -2203,6 +2330,8 @@ class $$CachedQuestionItemsTableTableManager
                 Value<String?> solution = const Value.absent(),
                 Value<int> examId = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
+                Value<String> questionType = const Value.absent(),
+                Value<double> mark = const Value.absent(),
               }) => CachedQuestionItemsCompanion(
                 id: id,
                 studentId: studentId,
@@ -2214,6 +2343,8 @@ class $$CachedQuestionItemsTableTableManager
                 solution: solution,
                 examId: examId,
                 createdAt: createdAt,
+                questionType: questionType,
+                mark: mark,
               ),
           createCompanionCallback:
               ({
@@ -2227,6 +2358,8 @@ class $$CachedQuestionItemsTableTableManager
                 Value<String?> solution = const Value.absent(),
                 required int examId,
                 Value<DateTime?> createdAt = const Value.absent(),
+                Value<String> questionType = const Value.absent(),
+                Value<double> mark = const Value.absent(),
               }) => CachedQuestionItemsCompanion.insert(
                 id: id,
                 studentId: studentId,
@@ -2238,6 +2371,8 @@ class $$CachedQuestionItemsTableTableManager
                 solution: solution,
                 examId: examId,
                 createdAt: createdAt,
+                questionType: questionType,
+                mark: mark,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

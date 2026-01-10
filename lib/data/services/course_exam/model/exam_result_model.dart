@@ -26,7 +26,9 @@ class ExamResultModel {
   int studentId;
   int courseExamId;
   String examName;
-  Map<int, int> answers;
+  Map<int, int> answers; // MCQ answers: question_id -> option_index
+  Map<int, String>?
+  writtenAnswers; // NEW: Written answers: question_id -> image_url
   double score;
   double duration;
   ResultType resultType;
@@ -48,6 +50,7 @@ class ExamResultModel {
     this.rank,
     required this.negativeMarking,
     this.questions = const [],
+    this.writtenAnswers,
   });
 
   static ExamResultModel? fromMap(Map<String, dynamic> map) {
@@ -57,7 +60,7 @@ class ExamResultModel {
       "exam_name": String examName,
       "result_type": String resultType,
       "course_exam_id": int courseExamId,
-      "result": Map answers,
+      "result": Map resultData,
       "start_time": String startTime,
       "score": double score,
       "duration": double duration,
@@ -66,6 +69,47 @@ class ExamResultModel {
       List<QuestionModel> questionList = [];
       if (questions is List) {
         questionList = questions.map((e) => QuestionModel.fromJson(e)).toList();
+      }
+
+      // Handle new JSONB structure: { "mcq_answers": {...}, "written_answers": {...} }
+      Map<int, int> mcqAnswers = {};
+      Map<int, String>? writtenAnswers;
+
+      if (resultData.containsKey("mcq_answers")) {
+        // New format - mcq_answers is inside result
+        var mcqData = resultData["mcq_answers"];
+        if (mcqData is Map) {
+          mcqAnswers = Map<int, int>.from(
+            mcqData.map(
+              (key, value) =>
+                  MapEntry(int.tryParse(key.toString()), value as int),
+            ),
+          );
+        }
+      } else {
+        // Old format (backward compatibility) - direct HashMap in result
+        mcqAnswers = Map<int, int>.from(
+          resultData.map(
+            (key, value) =>
+                MapEntry(int.tryParse(key.toString()), value as int),
+          ),
+        );
+      }
+
+      // written_answers is at the top level of the response, not inside result
+      var writtenData = map["written_answers"];
+      if (writtenData is Map) {
+        final tempWrittenAnswers = <int, String>{};
+        writtenData.forEach((key, value) {
+          final questionId = int.tryParse(key.toString());
+          if (questionId != null && value != null) {
+            tempWrittenAnswers[questionId] = value.toString();
+          }
+        });
+        // Only assign if map has entries
+        if (tempWrittenAnswers.isNotEmpty) {
+          writtenAnswers = tempWrittenAnswers;
+        }
       }
 
       return ExamResultModel(
@@ -77,11 +121,8 @@ class ExamResultModel {
         resultType:
             ResultType.fromString(resultType) ??
             ResultType.absent, // Default to absent if null
-        answers: Map<int, int>.from(
-          answers.map(
-            (key, value) => MapEntry(int.tryParse(key.toString()), value),
-          ),
-        ),
+        answers: mcqAnswers,
+        writtenAnswers: writtenAnswers,
         score: score,
         startTime: DateTime.parse(startTime).toLocal(),
         rank: map["rank"] as int?,

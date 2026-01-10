@@ -6,6 +6,10 @@ import 'package:poruaa_core/data/services/course_exam/model/course_exam_dto.dart
 import 'package:poruaa_core/data/services/course_exam/model/course_exam_result_with_student_dto.dart';
 import 'package:poruaa_core/data/services/course_exam/model/exam_result_model.dart';
 import 'package:poruaa_core/data/services/course_exam/model/publish_ranks_response.dart';
+import 'package:poruaa_core/data/services/course_exam/model/upload_written_answer_response.dart';
+import 'package:poruaa_core/data/services/course_exam/model/notify_upload_success_response.dart';
+import 'package:poruaa_core/data/services/course_exam/model/written_answer_for_grading.dart';
+import 'package:poruaa_core/data/services/course_exam/model/grade_written_response.dart';
 import 'package:poruaa_core/utils/result.dart';
 
 class CourseExamService {
@@ -264,11 +268,17 @@ class CourseExamService {
 
   Future<Result<ExamResultModel>> submitCourseExamOfStudentByMeByCourseExamId(
     int courseExamId,
-    Map<int, int> answers,
-  ) async {
-    var body = {
+    Map<int, int> answers, {
+    Map<int, String>? writtenAnswers,
+  }) async {
+    var body = <String, dynamic>{
       "answers": answers.map((key, value) => MapEntry(key.toString(), value)),
     };
+    if (writtenAnswers != null && writtenAnswers.isNotEmpty) {
+      body["written_answers"] = writtenAnswers.map(
+        (key, value) => MapEntry(key.toString(), value),
+      );
+    }
     var response = await _apiService.post(
       "students/me/exams/$courseExamId/submit",
       headers: {"Content-Type": "application/json"},
@@ -416,6 +426,187 @@ class CourseExamService {
           if (result == null) {
             return Result.error("Error parsing exam result");
           }
+          return Result.ok(result);
+        } else {
+          return Result.error(response.value.body);
+        }
+      case Err():
+        return Result.error("Connection error");
+    }
+  }
+
+  // Written Answer Upload Methods
+
+  /// Get presigned URL for uploading written answer image
+  Future<Result<UploadWrittenAnswerResponse>> getUploadWrittenAnswerUrl(
+    int courseExamId,
+    int questionId,
+    String fileName,
+  ) async {
+    var body = <String, dynamic>{
+      "question_id": questionId,
+      "file_name": fileName,
+    };
+    var response = await _apiService.post(
+      "students/me/exams/$courseExamId/upload-written-answer",
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(body),
+    );
+    switch (response) {
+      case Ok():
+        if (response.value.statusCode == 200) {
+          var body = response.value.body;
+          var jsonBody = jsonDecode(body);
+          var result = UploadWrittenAnswerResponse.fromJson(jsonBody);
+          return Result.ok(result);
+        } else {
+          return Result.error(response.value.body);
+        }
+      case Err():
+        return Result.error("Connection error");
+    }
+  }
+
+  /// Notify backend after successful image upload
+  Future<Result<NotifyUploadSuccessResponse>> notifyUploadSuccess(
+    int courseExamId,
+    int storageFileId,
+  ) async {
+    var body = <String, dynamic>{"storage_file_id": storageFileId};
+    var response = await _apiService.post(
+      "students/me/exams/$courseExamId/notify-upload-success",
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(body),
+    );
+    switch (response) {
+      case Ok():
+        if (response.value.statusCode == 200) {
+          var body = response.value.body;
+          var jsonBody = jsonDecode(body);
+          var result = NotifyUploadSuccessResponse.fromJson(jsonBody);
+          return Result.ok(result);
+        } else {
+          return Result.error(response.value.body);
+        }
+      case Err():
+        return Result.error("Connection error");
+    }
+  }
+
+  /// Get all written answers for grading (teacher)
+  Future<Result<List<WrittenAnswerForGrading>>> getWrittenAnswersForGrading(
+    int teacherId,
+    int courseExamId,
+  ) async {
+    var response = await _apiService.get(
+      "teachers/$teacherId/course-exams/$courseExamId/written-answers",
+    );
+    switch (response) {
+      case Ok():
+        if (response.value.statusCode == 200) {
+          var body = response.value.body;
+          var jsonBody = jsonDecode(body);
+          if (jsonBody is! List) {
+            return Result.error("Error parsing written answers");
+          }
+          var result = jsonBody
+              .map((e) => WrittenAnswerForGrading.fromJson(e))
+              .toList();
+          return Result.ok(result);
+        } else {
+          return Result.error(response.value.body);
+        }
+      case Err():
+        return Result.error("Connection error");
+    }
+  }
+
+  /// Grade a written answer (teacher)
+  Future<Result<GradeWrittenResponse>> gradeWrittenAnswer(
+    int teacherId,
+    int courseExamId,
+    int studentId,
+    int questionId,
+    double awardedMark, {
+    String? feedback,
+  }) async {
+    var body = <String, dynamic>{
+      "student_id": studentId,
+      "question_id": questionId,
+      "awarded_mark": awardedMark,
+    };
+    if (feedback != null) {
+      body["feedback"] = feedback;
+    }
+    var response = await _apiService.post(
+      "teachers/$teacherId/course-exams/$courseExamId/grade-written",
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(body),
+    );
+    switch (response) {
+      case Ok():
+        if (response.value.statusCode == 200) {
+          var body = response.value.body;
+          var jsonBody = jsonDecode(body);
+          var result = GradeWrittenResponse.fromJson(jsonBody);
+          return Result.ok(result);
+        } else {
+          return Result.error(response.value.body);
+        }
+      case Err():
+        return Result.error("Connection error");
+    }
+  }
+
+  /// Get presigned URL for replacing written answer image (teacher)
+  Future<Result<UploadWrittenAnswerResponse>> getReplaceWrittenAnswerUrl(
+    int teacherId,
+    int courseExamId,
+    int studentId,
+    int questionId,
+  ) async {
+    var body = <String, dynamic>{
+      "student_id": studentId,
+      "question_id": questionId,
+    };
+    var response = await _apiService.post(
+      "teachers/$teacherId/course-exams/$courseExamId/replace-written-answer",
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(body),
+    );
+    switch (response) {
+      case Ok():
+        if (response.value.statusCode == 200) {
+          var body = response.value.body;
+          var jsonBody = jsonDecode(body);
+          var result = UploadWrittenAnswerResponse.fromJson(jsonBody);
+          return Result.ok(result);
+        } else {
+          return Result.error(response.value.body);
+        }
+      case Err():
+        return Result.error("Connection error");
+    }
+  }
+
+  /// Notify backend after successful image replacement (teacher)
+  Future<Result<NotifyUploadSuccessResponse>> notifyReplaceSuccess(
+    int teacherId,
+    int courseExamId,
+    int storageFileId,
+  ) async {
+    var body = <String, dynamic>{"storage_file_id": storageFileId};
+    var response = await _apiService.post(
+      "teachers/$teacherId/course-exams/$courseExamId/notify-replace-success",
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(body),
+    );
+    switch (response) {
+      case Ok():
+        if (response.value.statusCode == 200) {
+          var body = response.value.body;
+          var jsonBody = jsonDecode(body);
+          var result = NotifyUploadSuccessResponse.fromJson(jsonBody);
           return Result.ok(result);
         } else {
           return Result.error(response.value.body);

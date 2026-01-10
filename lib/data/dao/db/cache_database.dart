@@ -72,6 +72,8 @@ class CachedQuestionItems extends Table {
   TextColumn get solution => text().nullable()();
   IntColumn get examId => integer().customConstraint('NOT NULL')();
   DateTimeColumn get createdAt => dateTime().nullable()();
+  TextColumn get questionType => text().withDefault(const Constant('mcq'))();
+  RealColumn get mark => real().withDefault(const Constant(1.0))();
 
   @override
   List<String> get customConstraints => [
@@ -138,5 +140,5 @@ class CacheDatabase extends _$CacheDatabase {
   }
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 }

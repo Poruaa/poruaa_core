@@ -16,6 +16,7 @@ class CourseExam {
   final bool free;
   final List<Question> questions;
   final Map<int, int> selectedOptions;
+  final Map<int, String>? writtenResults; // NEW: Previously uploaded written answers
   final double? negativeMarking;
   CourseExam({
     required this.id,
@@ -32,6 +33,7 @@ class CourseExam {
     required this.free,
     this.selectedOptions = const {},
     this.questions = const [],
+    this.writtenResults,
     this.negativeMarking,
   });
 
@@ -67,6 +69,7 @@ class CourseExam {
     bool? free,
     List<Question>? questions,
     Map<int, int>? selectedOptions,
+    Map<int, String>? writtenResults,
     double? negativeMarking,
   }) {
     return CourseExam(
@@ -84,6 +87,7 @@ class CourseExam {
       free: free ?? this.free,
       questions: questions ?? this.questions,
       selectedOptions: selectedOptions ?? this.selectedOptions,
+      writtenResults: writtenResults ?? this.writtenResults,
       negativeMarking: negativeMarking ?? this.negativeMarking,
     );
   }
@@ -104,6 +108,7 @@ class CourseExam {
       free: model.free,
       questions: model.questions.map((q) => Question.fromModel(q)).toList(),
       selectedOptions: model.selectedOptions,
+      writtenResults: model.writtenResults,
       negativeMarking: model.negativeMarking,
     );
   }

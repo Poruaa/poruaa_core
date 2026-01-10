@@ -7,7 +7,8 @@ class ExamResult {
   int courseExamId;
   String examName;
   final ResultType resultType;
-  Map<int, int> answers;
+  Map<int, int> answers; // MCQ answers: question_id -> option_index
+  Map<int, String>? writtenAnswers; // NEW: Written answers: question_id -> image_url
   double score;
   double duration;
   int? rank;
@@ -28,6 +29,7 @@ class ExamResult {
     required this.negativeMarking,
     required this.startTime,
     this.questions = const [],
+    this.writtenAnswers,
   });
 
   factory ExamResult.zero() {
@@ -42,6 +44,7 @@ class ExamResult {
       resultType: ResultType.absent,
       negativeMarking: 0.0,
       startTime: DateTime.now(),
+      writtenAnswers: null,
     );
   }
 
@@ -51,6 +54,7 @@ class ExamResult {
     int? courseExamId,
     String? examName,
     Map<int, int>? answers,
+    Map<int, String>? writtenAnswers,
     double? score,
     ResultType? resultType,
     List<Question>? questions,
@@ -65,6 +69,7 @@ class ExamResult {
       studentId: studentId ?? this.studentId,
       courseExamId: courseExamId ?? this.courseExamId,
       answers: answers ?? this.answers,
+      writtenAnswers: writtenAnswers ?? this.writtenAnswers,
       score: score ?? this.score,
       duration: duration ?? this.duration,
       resultType: resultType ?? this.resultType,
@@ -82,6 +87,7 @@ class ExamResult {
       studentId: model.studentId,
       courseExamId: model.courseExamId,
       answers: model.answers,
+      writtenAnswers: model.writtenAnswers,
       score: model.score,
       duration: model.duration,
       resultType: model.resultType,
@@ -99,6 +105,7 @@ class ExamResult {
       examName: examName,
       courseExamId: courseExamId,
       answers: answers,
+      writtenAnswers: writtenAnswers,
       score: score,
       resultType: resultType,
       duration: duration,

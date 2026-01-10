@@ -4,10 +4,7 @@ import 'package:poruaa_core/data/services/question/model/question_model.dart';
 // import 'package:poruaa_core/ui/core/widget/answer_question_tile_widget.dart';
 
 class QuestionOption {
-  QuestionOption({
-    required this.no,
-    required this.option,
-  });
+  QuestionOption({required this.no, required this.option});
   final int no;
   final String option;
 }
@@ -19,6 +16,8 @@ class Question {
   final int answer;
   final int examId;
   final String solve;
+  final String questionType; // "mcq" or "written"
+  final double mark; // Points for this question (default 1.0)
   Question({
     required this.id,
     required this.question,
@@ -26,6 +25,8 @@ class Question {
     required this.answer,
     required this.examId,
     required this.solve,
+    this.questionType = "mcq",
+    this.mark = 1.0,
   });
 
   factory Question.zero() {
@@ -41,6 +42,8 @@ class Question {
       answer: 0,
       examId: 0,
       solve: "",
+      questionType: "mcq",
+      mark: 1.0,
     );
   }
 
@@ -49,18 +52,24 @@ class Question {
     return Question(
       id: questionModel.id,
       question: questionModel.question,
-      options: List.generate(options.length,
-          (index) => QuestionOption(no: index, option: options[index])),
+      options: List.generate(
+        options.length,
+        (index) => QuestionOption(no: index, option: options[index]),
+      ),
       answer: questionModel.answer,
       examId: questionModel.examId,
       solve: questionModel.solve,
+      questionType: questionModel.questionType,
+      mark: questionModel.mark,
     );
   }
 
   static Question fromJson(Map<String, dynamic> json) {
     var options = List.from(json['options'] ?? []);
-    var optionsList = List.generate(options.length,
-        (index) => QuestionOption(no: index, option: options[index]));
+    var optionsList = List.generate(
+      options.length,
+      (index) => QuestionOption(no: index, option: options[index]),
+    );
     return Question(
       id: json['question_index'] ?? 0, // Use question_index as ID
       question: json['question'] ?? '',
@@ -68,6 +77,8 @@ class Question {
       answer: json['answer'] ?? 0,
       examId: 0, // Will be set when saving to database
       solve: json['solve'] ?? '',
+      questionType: json['question_type'] as String? ?? "mcq",
+      mark: (json['mark'] as num?)?.toDouble() ?? 1.0,
     );
   }
 
@@ -86,6 +97,8 @@ class Question {
       examId: examId,
       solve: solve,
       createdAt: DateTime.now(),
+      questionType: questionType,
+      mark: mark,
     );
   }
 
@@ -96,6 +109,8 @@ class Question {
     int? answer,
     int? examId,
     String? solve,
+    String? questionType,
+    double? mark,
   }) {
     return Question(
       id: id ?? this.id,
@@ -104,6 +119,8 @@ class Question {
       answer: answer ?? this.answer,
       examId: examId ?? this.examId,
       solve: solve ?? this.solve,
+      questionType: questionType ?? this.questionType,
+      mark: mark ?? this.mark,
     );
   }
 
@@ -111,8 +128,13 @@ class Question {
     var options = companion.options;
     List<QuestionOption> optionsList = options == null
         ? []
-        : List.generate(options.length,
-            (index) => QuestionOption(no: index, option: options[index]));
+        : List.generate(
+            options.length,
+            (index) => QuestionOption(no: index, option: options[index]),
+          );
+    // Note: questionType and mark fields will be available after running:
+    // flutter pub run build_runner build
+    // For now, using defaults since the database schema needs to be regenerated
     return Question(
       id: companion.id,
       question: companion.question,
@@ -120,6 +142,8 @@ class Question {
       answer: companion.answer,
       examId: companion.examId,
       solve: companion.solution ?? "",
+      questionType: "mcq", // Default until database is regenerated
+      mark: 1.0, // Default until database is regenerated
     );
   }
 

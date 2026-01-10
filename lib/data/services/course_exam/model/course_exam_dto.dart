@@ -15,6 +15,8 @@ class CourseExamModel {
   final bool free;
   final List<QuestionModel> questions;
   final Map<int, int> selectedOptions;
+  final Map<int, String>?
+  writtenResults; // NEW: Previously uploaded written answers
   final double? negativeMarking;
   CourseExamModel({
     required this.id,
@@ -31,6 +33,7 @@ class CourseExamModel {
     required this.teacherId,
     this.questions = const [],
     this.selectedOptions = const {},
+    this.writtenResults,
     this.negativeMarking,
   });
 
@@ -66,6 +69,7 @@ class CourseExamModel {
     int? teacherId,
     List<QuestionModel>? questions,
     Map<int, int>? selectedOptions,
+    Map<int, String>? writtenResults,
     double? negativeMarking,
   }) {
     return CourseExamModel(
@@ -83,6 +87,7 @@ class CourseExamModel {
       teacherId: teacherId ?? this.teacherId,
       questions: questions ?? this.questions,
       selectedOptions: selectedOptions ?? this.selectedOptions,
+      writtenResults: writtenResults ?? this.writtenResults,
       negativeMarking: negativeMarking ?? this.negativeMarking,
     );
   }
@@ -122,6 +127,17 @@ class CourseExamModel {
     } else {
       answers = {};
     }
+
+    // Parse written_results (previously uploaded written answers)
+    Map<int, String>? writtenResults;
+    var writtenResultsJson = json["written_results"];
+    if (writtenResultsJson is Map) {
+      writtenResults = writtenResultsJson.map(
+        (key, value) =>
+            MapEntry(int.tryParse(key.toString()) ?? 0, value.toString()),
+      );
+    }
+
     return CourseExamModel(
       id: json["id"],
       examId: json["exam_id"],
@@ -137,6 +153,7 @@ class CourseExamModel {
       teacherId: json["teacher_id"] ?? 0,
       questions: questions,
       selectedOptions: answers,
+      writtenResults: writtenResults,
       negativeMarking: json["negative_marking"]?.toDouble(),
     );
   }
