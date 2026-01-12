@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 import 'package:mime/mime.dart';
 
@@ -10,6 +10,90 @@ Future<Uint8List?> compressImageToJpeg(
   int targetSizeKB = 100,
   int maxWidth = 1280, // Fixed max width
 }) async {
+  return await compute<Uint8List, Uint8List?>((imageBytes) async {
+    return await _compressImageToJpeg(
+      imageBytes,
+      minQuality,
+      targetSizeKB,
+      maxWidth,
+    );
+  }, imageBytes);
+}
+
+Future<Uint8List?> _compressImageToJpeg(
+  Uint8List imageBytes,
+  int minQuality,
+  int targetSizeKB,
+  int maxWidth, // Fixed max width
+) async {
+  final targetSizeBytes = targetSizeKB * 1024;
+
+  final mimeType = lookupMimeType('', headerBytes: imageBytes);
+  if (mimeType == null || !mimeType.startsWith('image/')) return null;
+
+  if ((mimeType == 'image/webp' || mimeType == 'image/jpeg') &&
+      imageBytes.length < targetSizeBytes) {
+    return imageBytes;
+  }
+
+  final image = img.decodeImage(imageBytes);
+  if (image == null) return null;
+
+  // Check if original image is already small enough
+  final originalJpegBytes = Uint8List.fromList(
+    img.encodeJpg(image, quality: 100),
+  );
+  if (originalJpegBytes.length <= targetSizeBytes) {
+    return originalJpegBytes;
+  }
+
+  // Calculate the aspect ratio of the original image
+  final originalAspectRatio = image.width / image.height;
+  maxWidth = min(maxWidth, image.width);
+
+  // --- Step 1: Resize to max width while preserving aspect ratio ---
+  final resized = img.copyResize(
+    image,
+    width: maxWidth,
+    height: (maxWidth / originalAspectRatio).round(),
+    interpolation: img.Interpolation.cubic,
+  );
+
+  // --- Step 2: Compress to JPEG under target size ---
+  for (int quality = 80; quality >= minQuality; quality -= 10) {
+    final jpegBytes = Uint8List.fromList(
+      img.encodeJpg(resized, quality: quality),
+    );
+    if (jpegBytes.length <= targetSizeBytes) {
+      return jpegBytes;
+    }
+  }
+
+  return null;
+}
+
+Future<Uint8List?> compressImageToThumbnailSizeJpeg(
+  Uint8List imageBytes, {
+  int minQuality = 30,
+  int targetSizeKB = 100,
+  int maxWidth = 1280, // Fixed max width
+}) async {
+  return await compute<Uint8List, Uint8List?>((imageBytes) async {
+    return await _compressImageToThumbnailSizeJpeg(
+      imageBytes,
+      minQuality,
+      targetSizeKB,
+      maxWidth,
+    );
+  }, imageBytes);
+}
+
+Future<Uint8List?> _compressImageToThumbnailSizeJpeg(
+  Uint8List imageBytes,
+  int minQuality,
+  int targetSizeKB,
+  int maxWidth, // Fixed max width
+) async {
   final targetSizeBytes = targetSizeKB * 1024;
 
   final mimeType = lookupMimeType('', headerBytes: imageBytes);
@@ -44,9 +128,7 @@ Future<Uint8List?> compressImageToJpeg(
     height: cropHeight,
   );
 
-  final croppedBytes = Uint8List.fromList(
-    img.encodeJpg(cropped, quality: 100),
-  );
+  final croppedBytes = Uint8List.fromList(img.encodeJpg(cropped, quality: 100));
   if (croppedBytes.length <= targetSizeBytes) {
     return croppedBytes;
   }
